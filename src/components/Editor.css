@@ -3,29 +3,77 @@
     flex-direction: column;
     height: 100vh;
 }
+
+.editorHeader {
+    background-color: #1c1c1c;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid #444;
+}
+
+.languageSelect {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: monospace;
+}
+
 .editorPane {
     flex-grow: 1;
 }
+
 .runBar {
     background-color: #1c1c1c;
-    padding: 8px;
+    padding: 8px 16px;
     border-top: 1px solid #444;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-end; /* ✅ Buttons go to right */
+    gap: 12px;
 }
-.runBtn {
-    background-color: #4aee88;
-    color: #1c1c1c;
-    border: none;
+
+.runBtn,
+.saveBtn,
+.exportBtn {
     padding: 8px 24px;
+    font-size: 15px;
+    border: none;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
+
+.runBtn {
+    background-color: #4aee88;
+    color: #1c1c1c;
+}
+
 .runBtn:hover {
     background-color: #3ac672;
 }
+
+.saveBtn {
+    background-color: #ffc107;
+    color: #1c1c1c;
+}
+
+.saveBtn:hover {
+    background-color: #e0a800;
+}
+
+.exportBtn {
+    background-color: #00bcd4;
+    color: #1c1c1c;
+}
+
+.exportBtn:hover {
+    background-color: #0097a7;
+}
+
 .outputWrap {
     height: 152px;
     background-color: #282a36;
@@ -34,10 +82,11 @@
     overflow-y: auto;
     border-top: 1px solid #444;
 }
+
 .outputConsole {
     padding: 10px;
     margin: 0;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
     font-size: 14px;
 }
