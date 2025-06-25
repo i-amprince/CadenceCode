@@ -23,9 +23,7 @@ export default function EditorPage() {
     }, [location.state, navigate]);
 
     useEffect(() => {
-        if (!location.state) {
-            return;
-        }
+        if (!location.state) return;
 
         const handleJoined = ({ clients, username, socketId }) => {
             if (username !== location.state?.username) {
@@ -49,6 +47,7 @@ export default function EditorPage() {
         socket.emit('JOIN', {
             roomId,
             username: location.state?.username,
+            picture: JSON.parse(localStorage.getItem('user'))?.picture || '',
         });
 
         socket.on('JOINED', handleJoined);
@@ -74,9 +73,7 @@ export default function EditorPage() {
         navigate('/');
     };
 
-    if (!location.state) {
-        return null; // or a loading spinner
-    }
+    if (!location.state) return null;
 
     return (
         <div className="mainWrap">
@@ -91,6 +88,7 @@ export default function EditorPage() {
                             <Client
                                 key={client.socketId}
                                 username={client.username}
+                                picture={client.picture}
                                 isCurrentUser={client.socketId === socket.id}
                             />
                         ))}

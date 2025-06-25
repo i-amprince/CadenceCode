@@ -90,3 +90,14 @@
     word-break: break-word;
     font-size: 14px;
 }
+
+
+.checkpointDropdown {
+    margin-left: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #282c34;
+    color: white;
+    border: 1px solid #444;
+}

@@ -49,4 +49,18 @@ router.get('/:roomId/info', async (req, res) => {
   }
 });
 
+
+router.get('/:roomId/checkpoints', async (req, res) => {
+    try {
+        const doc = await Code.findOne({ roomId: req.params.roomId });
+        if (!doc) return res.status(404).json({ error: 'Room not found' });
+
+        res.json({ checkpoints: doc.checkpoints || [] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to get checkpoints' });
+    }
+});
+
+
 module.exports = router;

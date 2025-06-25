@@ -5,8 +5,14 @@ const mongoose = require('mongoose');
 const CodeSchema = new mongoose.Schema({
     roomId: { type: String, required: true, unique: true },
     code: { type: String, default: '' },
-    password: { type: String },     // 🔐 NEW
-    creator: { type: String },      // 👤 NEW
+    password: { type: String },
+    creator: { type: String },
+    checkpoints: [
+        {
+            code: String,
+            savedAt: { type: Date, default: Date.now },
+        }
+    ],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Code', CodeSchema);

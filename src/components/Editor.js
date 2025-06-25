@@ -19,39 +19,49 @@ const Editor = ({ roomId, onCodeChange }) => {
     const [code, setCode] = useState('');
     const [output, setOutput] = useState([]);
     const [language, setLanguage] = useState('javascript');
+    const [checkpoints, setCheckpoints] = useState([]);
 
     useEffect(() => {
         const handleCodeChange = ({ code: newCode }) => {
             if (newCode !== null) setCode(newCode);
         };
         socket.on('CODE_CHANGE', handleCodeChange);
-
         return () => socket.off('CODE_CHANGE', handleCodeChange);
     }, []);
 
     useEffect(() => {
         const handleOutput = ({ output }) => setOutput(output);
         socket.on('CODE_OUTPUT', handleOutput);
-
         return () => socket.off('CODE_OUTPUT', handleOutput);
     }, []);
 
     useEffect(() => {
         const handleSaveSuccess = () => {
             toast.success('Code saved successfully!');
+            fetchCheckpoints(); // Refresh after saving
         };
         socket.on('SAVE_SUCCESS', handleSaveSuccess);
-
         return () => socket.off('SAVE_SUCCESS', handleSaveSuccess);
     }, []);
+
+    const fetchCheckpoints = async () => {
+        try {
+            const res = await fetch(`http://localhost:5000/api/room/${roomId}/checkpoints`);
+            const data = await res.json();
+            setCheckpoints(data.checkpoints || []);
+        } catch (err) {
+            toast.error('Failed to load checkpoints');
+        }
+    };
+
+    useEffect(() => {
+        fetchCheckpoints();
+    }, [roomId]);
 
     const sendCodeChange = (newCode) => {
         setCode(newCode);
         onCodeChange(newCode);
-        socket.emit('CODE_CHANGE', {
-            roomId,
-            code: newCode,
-        });
+        socket.emit('CODE_CHANGE', { roomId, code: newCode });
     };
 
     const handleLanguageChange = (e) => {
@@ -67,10 +77,7 @@ const Editor = ({ roomId, onCodeChange }) => {
     };
 
     const saveCode = () => {
-        socket.emit('SAVE_CODE', {
-            roomId,
-            code,
-        });
+        socket.emit('SAVE_CODE', { roomId, code });
     };
 
     const exportCode = () => {
@@ -86,6 +93,14 @@ const Editor = ({ roomId, onCodeChange }) => {
         URL.revokeObjectURL(fileUrl);
     };
 
+    const restoreCheckpoint = (index) => {
+        const selected = checkpoints[index];
+        if (!selected) return;
+        setCode(selected.code);
+        socket.emit('CODE_CHANGE', { roomId, code: selected.code });
+        toast.success('Code restored from checkpoint');
+    };
+
     return (
         <div className="editorContainer">
             <div className="editorHeader">
@@ -95,8 +110,21 @@ const Editor = ({ roomId, onCodeChange }) => {
                     onChange={handleLanguageChange}
                 >
                     {Object.entries(LANGUAGES).map(([key, val]) => (
-                        <option key={key} value={key}>
-                            {val.label}
+                        <option key={key} value={key}>{val.label}</option>
+                    ))}
+                </select>
+
+                <select
+                    className="checkpointDropdown"
+                    onChange={(e) => {
+                        const index = e.target.value;
+                        if (index !== '') restoreCheckpoint(index);
+                    }}
+                >
+                    <option value="">🕓 Restore Checkpoint</option>
+                    {checkpoints.map((cp, i) => (
+                        <option key={i} value={i}>
+                            {new Date(cp.savedAt).toLocaleTimeString()}
                         </option>
                     ))}
                 </select>
@@ -107,7 +135,7 @@ const Editor = ({ roomId, onCodeChange }) => {
                     value={code}
                     height="calc(100vh - 240px)"
                     theme={dracula}
-                    extensions={[javascript({ jsx: true })]}  // Note: Static JS syntax highlighting
+                    extensions={[javascript({ jsx: true })]}
                     onChange={sendCodeChange}
                     style={{ fontSize: 16 }}
                 />
@@ -121,8 +149,8 @@ const Editor = ({ roomId, onCodeChange }) => {
 
             <div className="outputWrap">
                 <pre className="outputConsole">
-                    {output.map((line, index) => (
-                        <div key={index}>{`> ${line}`}</div>
+                    {output.map((line, i) => (
+                        <div key={i}>{`> ${line}`}</div>
                     ))}
                 </pre>
             </div>
