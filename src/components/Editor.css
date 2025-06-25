@@ -1,0 +1,43 @@
+.editorContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.editorPane {
+    flex-grow: 1;
+}
+.runBar {
+    background-color: #1c1c1c;
+    padding: 8px;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: flex-end;
+}
+.runBtn {
+    background-color: #4aee88;
+    color: #1c1c1c;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.runBtn:hover {
+    background-color: #3ac672;
+}
+.outputWrap {
+    height: 152px;
+    background-color: #282a36;
+    color: #f8f8f2;
+    font-family: 'Courier New', Courier, monospace;
+    overflow-y: auto;
+    border-top: 1px solid #444;
+}
+.outputConsole {
+    padding: 10px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 14px;
+}

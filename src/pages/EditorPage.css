@@ -1,0 +1,115 @@
+/* src/pages/EditorPage.css */
+
+/* Main layout using CSS Grid for perfect column control */
+.mainWrap {
+    display: grid;
+    /* Creates two columns: a fixed 230px sidebar and an editor that takes the rest of the space */
+    grid-template-columns: 230px 1fr;
+    height: 100vh; /* Ensures the layout fills the entire screen height */
+}
+
+/* --- Sidebar Styling --- */
+.aside {
+    background: #1c1c1c;
+    padding: 16px;
+    color: #fff;
+    display: flex; /* Key for positioning the buttons at the bottom */
+    flex-direction: column;
+}
+
+.asideInner {
+    flex: 1; /* This is the magic! It makes this div grow and push the buttons down */
+}
+
+.logo {
+    border-bottom: 1px solid #444;
+    padding-bottom: 1rem;
+}
+
+.logoImage {
+    height: 60px;
+}
+
+.asideInner h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Styling the list of connected clients */
+.clientsList {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allows clients to wrap to the next line */
+    gap: 20px; /* Provides spacing between each client avatar */
+}
+
+/* --- General Button Styling --- */
+.btn {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.copyBtn {
+    background: #fff;
+    color: #1c1c1c;
+    margin-top: 20px; /* Space above the first button */
+}
+
+.copyBtn:hover {
+    background: #f0f0f0;
+}
+
+.leaveBtn {
+    background: #4aee88;
+    color: #1c1c1c;
+    margin-top: 10px;
+}
+
+.leaveBtn:hover {
+    background: #3ac672;
+}
+
+/* --- Editor Pane Styling --- */
+.editorWrap {
+    /* The editor component itself will fill this container */
+    height: 100vh;
+}
+
+
+.connectionStatus {
+    padding: 10px;
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #ffd700;
+}
+
+.connectionError {
+    padding: 10px;
+    background-color: #ff5555;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+}
+
+.retryBtn {
+    margin-top: 8px;
+    background-color: #4aee88;
+    color: #1c1c1c;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.retryBtn:hover {
+    background-color: #3dd16f;
+}

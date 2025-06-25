@@ -1,0 +1,118 @@
+.homePageWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #fff;
+    background: #1c1c1c; 
+    font-family: 'Arial', sans-serif;
+}
+
+.formWrapper {
+    background: #282a36; 
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo styling */
+.homePageLogo {
+    height: 80px;
+    display: block;
+    margin: 0 auto 1.5rem; /* Center the logo */
+}
+
+/* "Enter Invitation..." label */
+.mainLabel {
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+/* Container for all inputs and buttons */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Styling for the input fields */
+.inputBox {
+    padding: 12px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid transparent;
+    margin-bottom: 1rem;
+    background: #3b3d51;
+    font-size: 16px;
+    color: #f8f8f2; /* Light text color */
+    transition: border-color 0.3s ease-in-out;
+}
+
+.inputBox::placeholder {
+    color: #8a8a8a;
+}
+
+.inputBox:focus {
+    border-color: #4aee88; /* Highlight on focus */
+}
+
+/* Base button styling */
+.btn {
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 12px;
+}
+
+/* Specific styling for the 'Join' button */
+.joinBtn {
+    background: #4aee88; /* Vibrant green */
+    color: #1c1c1c; /* Dark text for contrast */
+    width: 100%; /* Make button full-width of the form group */
+}
+
+.joinBtn:hover {
+    background: #3ac672; /* Slightly darker green on hover */
+}
+
+/* "Don't have an invite?" text */
+.createInfo {
+    margin-top: 1rem;
+    text-align: center;
+    color: #bd93f9; /* A nice accent color */
+}
+
+/* The "new room" link */
+.createNewBtn {
+    color: #4aee88;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid #4aee88;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.createNewBtn:hover {
+    color: #f8f8f2;
+    border-color: #f8f8f2;
+}
+
+/* Footer styling */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 10px;
+    color: #a9a9a9;
+}
+
+.footerLink {
+    color: #4aee88;
+    text-decoration: none;
+}

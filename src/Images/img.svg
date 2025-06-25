@@ -1,0 +1,18 @@
+<!-- logo.svg -->
+<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top-left node and its connections -->
+  <g>
+    <path d="M 30 30 L 70 30" stroke="#4aee88" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 30 30 L 30 70" stroke="#4aee88" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="30" cy="30" r="10" fill="#f8f8f2"/>
+    <circle cx="30" cy="30" r="5" fill="#4aee88"/>
+  </g>
+  
+  <!-- Bottom-right node and its connections -->
+  <g>
+    <path d="M 70 70 L 30 70" stroke="#ff79c6" stroke-width="7" stroke-linecap="round"/>
+    <path d="M 70 70 L 70 30" stroke="#ff79c6" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="70" cy="70" r="10" fill="#f8f8f2"/>
+    <circle cx="70" cy="70" r="5" fill="#ff79c6"/>
+  </g>
+</svg>

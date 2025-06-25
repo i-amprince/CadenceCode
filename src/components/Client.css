@@ -1,0 +1,22 @@
+/* src/components/Client.css */
+
+.client {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.username {
+    margin-left: 10px;
+}
+
+.currentUser .username {
+    font-weight: bold;
+}
+
+.youLabel {
+    color: #7e8185;
+    font-size: 0.9em;
+    font-weight: normal;
+}
