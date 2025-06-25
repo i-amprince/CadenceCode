@@ -2,43 +2,74 @@ import React, { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-// Your assets
 import LogoImg from '../Images/img.svg';
-// Import the CSS module
 import styles from './Home.module.css';
 
 export default function Home() {
     const navigate = useNavigate();
-
     const [roomId, setRoomId] = useState('');
     const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    // Function to create a new room and update the input field
-    const createNewRoom = (e) => {
-        e.preventDefault(); // Prevent the default anchor tag behavior
+    // ✅ Step 1: Generate room ID only (no DB write)
+    const generateRoomId = (e) => {
+        e.preventDefault();
         const id = uuidV4();
         setRoomId(id);
-        toast.success('New Room Created!');
+        toast.success(`Room ID Generated`);
     };
 
-    // Function to join a room
-    const joinRoom = () => {
-        // Validate inputs
-        if (!roomId || !username) {
-            toast.error('Room ID & Username are required.');
+    // ✅ Step 2: Create room in DB with validations
+    const createNewRoom = async (e) => {
+        e.preventDefault();
+
+        if (!roomId) {
+            toast.error('Please generate a Room ID first.');
             return;
         }
 
-        // Redirect to the editor page, passing username via state
-        navigate(`/editor/${roomId}`, {
-            state: {
-                username,
-            },
-        });
+        if (!username || !password) {
+            toast.error('Username and Password are required.');
+            return;
+        }
+
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            await axios.post('http://localhost:5000/api/room/create', {
+                roomId,
+                password,
+                creator: user?.email || username,
+            });
+            toast.success('Room Created Successfully!');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Room creation failed');
+        }
     };
 
-    // Handle 'Enter' key press in inputs to join the room
+    const joinRoom = async () => {
+        if (!roomId || !username || !password) {
+            toast.error('Room ID, Username & Password are required.');
+            return;
+        }
+
+        try {
+            await axios.post('http://localhost:5000/api/room/join', {
+                roomId,
+                password,
+            });
+
+            navigate(`/editor/${roomId}`, {
+                state: {
+                    username,
+                },
+            });
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Join failed');
+        }
+    };
+
     const handleInputEnter = (e) => {
         if (e.code === 'Enter') {
             joinRoom();
@@ -53,7 +84,7 @@ export default function Home() {
                     src={LogoImg}
                     alt="Sync Code Logo"
                 />
-                <h4 className={styles.mainLabel}>Enter Invitation ROOM ID</h4>
+                <h4 className={styles.mainLabel}>Join or Create a ROOM</h4>
 
                 <div className={styles.inputGroup}>
                     <input
@@ -72,19 +103,34 @@ export default function Home() {
                         value={username}
                         onKeyUp={handleInputEnter}
                     />
-                    <button className={`${styles.btn} ${styles.joinBtn}`} onClick={joinRoom}>
+                    <input
+                        type="password"
+                        className={styles.inputBox}
+                        placeholder="Room Password (required)"
+                        onChange={(e) => setPassword(e.target.value)}
+                        value={password}
+                        onKeyUp={handleInputEnter}
+                    />
+                    <button
+                        className={`${styles.btn} ${styles.joinBtn}`}
+                        onClick={joinRoom}
+                    >
                         Join
                     </button>
-                    <span className={styles.createInfo}>
-                        Don't have an invite? Create your own 
-                        <a
-                            onClick={createNewRoom}
-                            href=""
-                            className={styles.createNewBtn}
+                    <div className={styles.createInfo}>
+                        <button
+                            className={styles.btn}
+                            onClick={generateRoomId}
                         >
-                            room
-                        </a>
-                    </span>
+                            Generate Room ID
+                        </button>
+                        <button
+                            className={`${styles.btn} ${styles.createBtn}`}
+                            onClick={createNewRoom}
+                        >
+                            Create Room
+                        </button>
+                    </div>
                 </div>
             </div>
 

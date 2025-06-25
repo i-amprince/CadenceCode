@@ -4,16 +4,23 @@ const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const Code = require('./models/Code'); // MongoDB model
+const authRoutes = require('./routes/Auth'); // ✅ import custom auth route
+const roomRoutes = require('./routes/room');
 
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
-    },
-});
+// Add this to parse JSON in POST requests
+app.use(express.json());
+
+const cors = require('cors');
+app.use(cors({
+  origin: 'http://localhost:3000', // allow frontend
+  credentials: true, // allow cookies (if used later)
+}));
+
+app.use('/api/auth', authRoutes); // ✅ connect auth route
+app.use('/api/room', roomRoutes); // newly added
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/collab-editor', {
@@ -23,10 +30,16 @@ mongoose.connect('mongodb://localhost:27017/collab-editor', {
 .then(() => console.log('✅ MongoDB connected'))
 .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Map socketId to username
+// Socket.io setup
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    },
+});
+
 const userSocketMap = {};
 
-// Helper: Get all clients in room
 function getAllConnectedClients(roomId) {
     const clients = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
     return clients.map((socketId) => ({
@@ -35,7 +48,6 @@ function getAllConnectedClients(roomId) {
     }));
 }
 
-// Socket.IO logic
 io.on('connection', (socket) => {
     console.log('🟢 User connected:', socket.id);
 
@@ -45,7 +57,6 @@ io.on('connection', (socket) => {
 
         const clients = getAllConnectedClients(roomId);
 
-        // Load saved code from DB
         let existingCode = '';
         try {
             const doc = await Code.findOne({ roomId });
@@ -60,18 +71,15 @@ io.on('connection', (socket) => {
             socketId: socket.id,
         });
 
-        // Sync code only to the new user
         if (existingCode) {
             socket.emit('CODE_CHANGE', { code: existingCode });
         }
     });
 
-    // Broadcast code to others (but don't save in DB here)
     socket.on('CODE_CHANGE', ({ roomId, code }) => {
         socket.to(roomId).emit('CODE_CHANGE', { code });
     });
 
-    // Manually save code on Save button click
     socket.on('SAVE_CODE', async ({ roomId, code }) => {
         try {
             await Code.findOneAndUpdate(
@@ -80,7 +88,7 @@ io.on('connection', (socket) => {
                 { upsert: true, new: true }
             );
 
-             socket.emit('SAVE_SUCCESS');
+            socket.emit('SAVE_SUCCESS');
             console.log(`💾 Code saved manually for room: ${roomId}`);
         } catch (err) {
             console.error('Error saving code:', err);
@@ -91,7 +99,6 @@ io.on('connection', (socket) => {
         io.to(socketId).emit('CODE_CHANGE', { code });
     });
 
-    // Run code using Judge0
     socket.on('RUN_CODE', async ({ code, languageId }) => {
         const L_ID = languageId || 93;
 
@@ -172,6 +179,5 @@ io.on('connection', (socket) => {
     });
 });
 
-// Start server
 const PORT = 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
