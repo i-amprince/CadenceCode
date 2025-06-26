@@ -94,6 +94,11 @@ CadenceCode is built using a modern and robust tech stack:
 ![Checkpoints](src/Images/5.png)
 *Restore previous code checkpoints for each file directly from the editor.*
 
+### 5. Code Exection
+
+![Code Execution](src/Images/6.png)
+*Execute the code opened currently in the editor.*
+
 ---
 
 ## 📦 Getting Started
