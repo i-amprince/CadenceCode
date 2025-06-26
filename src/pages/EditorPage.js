@@ -10,7 +10,7 @@ import LogoImg from '../Images/img.svg';
 import './EditorPage.css';
 
 export default function EditorPage() {
-  const codeRef = useRef(null);
+  const codeRef = useRef({});
   const location = useLocation();
   const { roomId } = useParams();
   const navigate = useNavigate();
@@ -33,10 +33,13 @@ export default function EditorPage() {
         toast.success(`${username} joined the room.`);
       }
       setClients(clients);
-      socket.emit('SYNC_CODE', {
-        code: codeRef.current,
-        socketId,
-      });
+
+      // Emit latest code for all files
+      if (codeRef.current && typeof codeRef.current === 'object') {
+        for (const [fileName, code] of Object.entries(codeRef.current)) {
+          socket.emit('CODE_CHANGE', { roomId, fileName, code });
+        }
+      }
     };
 
     const handleDisconnected = ({ socketId, username }) => {
@@ -120,8 +123,8 @@ export default function EditorPage() {
       <div className="editorWrap">
         <Editor
           roomId={roomId}
-          onCodeChange={(code) => {
-            codeRef.current = code;
+          onCodeChange={(codeObj) => {
+            codeRef.current = codeObj;
           }}
         />
       </div>

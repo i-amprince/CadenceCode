@@ -1,17 +1,14 @@
-// server/routes/room.js
-
 const express = require('express');
 const router = express.Router();
 const Code = require('../models/Code');
 
-// Create a new room
 router.post('/create', async (req, res) => {
   const { roomId, password, creator } = req.body;
   try {
     const existing = await Code.findOne({ roomId });
     if (existing) return res.status(400).json({ error: 'Room already exists' });
 
-    await Code.create({ roomId, password, creator });
+    await Code.create({ roomId, password, creator, files: [] });
     res.status(200).json({ message: 'Room created successfully' });
   } catch (err) {
     console.error(err);
@@ -19,7 +16,6 @@ router.post('/create', async (req, res) => {
   }
 });
 
-// Join a room
 router.post('/join', async (req, res) => {
   const { roomId, password } = req.body;
   try {
@@ -36,31 +32,24 @@ router.post('/join', async (req, res) => {
   }
 });
 
-// Optional: Fetch room info
 router.get('/:roomId/info', async (req, res) => {
-  const { roomId } = req.params;
   try {
-    const room = await Code.findOne({ roomId });
+    const room = await Code.findOne({ roomId: req.params.roomId });
     if (!room) return res.status(404).json({ error: 'Room not found' });
-
     res.status(200).json({ creator: room.creator });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch room info' });
   }
 });
 
-
 router.get('/:roomId/checkpoints', async (req, res) => {
-    try {
-        const doc = await Code.findOne({ roomId: req.params.roomId });
-        if (!doc) return res.status(404).json({ error: 'Room not found' });
-
-        res.json({ checkpoints: doc.checkpoints || [] });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to get checkpoints' });
-    }
+  try {
+    const doc = await Code.findOne({ roomId: req.params.roomId });
+    if (!doc) return res.status(404).json({ error: 'Room not found' });
+    res.json({ checkpoints: doc.checkpoints || [] });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to get checkpoints' });
+  }
 });
-
 
 module.exports = router;

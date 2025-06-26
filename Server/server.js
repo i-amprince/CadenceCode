@@ -12,34 +12,23 @@ const server = http.createServer(app);
 
 app.use(express.json());
 const cors = require('cors');
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/room', roomRoutes);
 
-
-mongoose.connect('mongodb://localhost:27017/collab-editor', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ MongoDB connected'))
-.catch((err) => console.error('❌ MongoDB connection error:', err));
+mongoose.connect('mongodb://localhost:27017/collab-editor')
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST'],
-  },
+  cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] },
 });
 
 const userSocketMap = {};
 
-function getAllConnectedClients(roomId) {
-  const clients = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
-  return clients.map((socketId) => ({
+function getClients(roomId) {
+  return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(socketId => ({
     socketId,
     username: userSocketMap[socketId]?.username,
     picture: userSocketMap[socketId]?.picture,
@@ -47,93 +36,65 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on('connection', (socket) => {
-  console.log('🟢 User connected:', socket.id);
+  console.log('🟢 Connected:', socket.id);
 
   socket.on('JOIN', async ({ roomId, username, picture }) => {
     userSocketMap[socket.id] = { username, picture };
     socket.join(roomId);
 
-    const clients = getAllConnectedClients(roomId);
+    const clients = getClients(roomId);
+    io.in(roomId).emit('JOINED', { clients, username, socketId: socket.id });
+  });
 
-    let existingCode = '';
+  socket.on('GET_INITIAL_DATA', async ({ roomId }) => {
+    const doc = await Code.findOne({ roomId });
+    socket.emit('INITIAL_DATA', { files: doc?.files || [] });
+  });
+
+  socket.on('NEW_FILE', async ({ roomId, file }) => {
     try {
       const doc = await Code.findOne({ roomId });
-      if (doc) existingCode = doc.code;
+      if (!doc) return;
+      if (!doc.files.some(f => f.name === file.name)) {
+        doc.files.push(file);
+        await doc.save();
+        io.in(roomId).emit('NEW_FILE_ADDED', { file });
+      }
     } catch (err) {
-      console.error('Error loading code:', err);
-    }
-
-    io.in(roomId).emit('JOINED', {
-      clients,
-      username,
-      socketId: socket.id,
-    });
-
-    if (existingCode) {
-      socket.emit('CODE_CHANGE', { code: existingCode });
+      console.error('Error adding new file:', err);
     }
   });
 
-  socket.on('CHAT_MESSAGE', ({ roomId, username, message }) => {
-  io.in(roomId).emit('CHAT_MESSAGE', {
-    username,
-    message,
-    timestamp: new Date().toISOString(),
-  });
-});
-
-
-  socket.on('CODE_CHANGE', ({ roomId, code }) => {
-    socket.to(roomId).emit('CODE_CHANGE', { code });
+  socket.on('CODE_CHANGE', ({ roomId, fileName, code }) => {
+    socket.to(roomId).emit('CODE_CHANGE', { fileName, code });
   });
 
-  socket.on('SAVE_CODE', async ({ roomId, code }) => {
-  try {
-    const room = await Code.findOne({ roomId });
+  socket.on('SAVE_CODE', async ({ roomId, fileName, code }) => {
+    try {
+      const doc = await Code.findOne({ roomId });
+      if (!doc) return;
 
-    if (!room) {
-      console.warn(`Room ${roomId} not found while saving code.`);
-      return;
+      const file = doc.files.find(f => f.name === fileName);
+      if (file) file.code = code;
+      else doc.files.push({ name: fileName, code });
+
+      doc.checkpoints.unshift({ fileName, code, savedAt: new Date() });
+
+      const grouped = doc.checkpoints.reduce((acc, cp) => {
+        acc[cp.fileName] = acc[cp.fileName] || [];
+        acc[cp.fileName].push(cp);
+        return acc;
+      }, {});
+      doc.checkpoints = Object.values(grouped).flatMap(arr => arr.slice(0, 5));
+
+      await doc.save();
+      socket.emit('SAVE_SUCCESS');
+    } catch (err) {
+      console.error('❌ Save error:', err);
     }
-
-    // Update the main code field
-    room.code = code;
-
-    // Add new checkpoint to the top of the array
-    room.checkpoints.unshift({
-      code,
-      savedAt: new Date(),
-    });
-
-    // Trim the list to the latest 5 only
-    room.checkpoints = room.checkpoints.slice(0, 5);
-
-    await room.save();
-
-    socket.emit('SAVE_SUCCESS');
-    console.log(`💾 Code and checkpoint saved for room: ${roomId}`);
-  } catch (err) {
-    console.error('❌ Error saving checkpoint:', err);
-  }
-});
-
-
-    //adeed now 
-  socket.on('KICK_USER', ({ socketId }) => {
-  const kickedSocket = io.sockets.sockets.get(socketId);
-  if (kickedSocket) {
-    kickedSocket.emit('KICKED');
-    kickedSocket.disconnect();
-  }
-});
-
-
-  socket.on('SYNC_CODE', ({ socketId, code }) => {
-    io.to(socketId).emit('CODE_CHANGE', { code });
   });
 
   socket.on('RUN_CODE', async ({ code, languageId }) => {
-    const L_ID = languageId || 93;
     const submissionOptions = {
       method: 'POST',
       url: 'https://judge0-ce.p.rapidapi.com/submissions',
@@ -143,58 +104,54 @@ io.on('connection', (socket) => {
         'X-RapidAPI-Key': 'd79b06c1ccmshf3d09d3d252ce64p17a1c7jsna1919a91c387',
         'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       },
-      data: {
-        language_id: L_ID,
-        source_code: code,
-      },
+      data: { language_id: languageId || 93, source_code: code },
     };
 
     try {
-      const submissionResponse = await axios.request(submissionOptions);
-      const token = submissionResponse.data.token;
+      const res = await axios.request(submissionOptions);
+      const token = res.data.token;
 
-      const checkStatus = async () => {
-        const resultOptions = {
-          method: 'GET',
-          url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
-          params: { base64_encoded: 'false', fields: '*' },
-          headers: {
-            'X-RapidAPI-Key': 'd79b06c1ccmshf3d09d3d252ce64p17a1c7jsna1919a91c387',
-            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
-          },
-        };
+      const poll = async () => {
+        const result = await axios.get(
+          `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+          {
+            params: { base64_encoded: 'false', fields: '*' },
+            headers: submissionOptions.headers,
+          }
+        );
 
-        const resultResponse = await axios.request(resultOptions);
-        const statusId = resultResponse.data.status.id;
+        const statusId = result.data.status.id;
+        if (statusId <= 2) return setTimeout(poll, 1500);
 
-        if (statusId === 1 || statusId === 2) {
-          setTimeout(checkStatus, 2000);
-          return;
-        }
+        const output = [];
+        if (result.data.stdout) output.push(...result.data.stdout.split('\n'));
+        if (result.data.stderr) output.push(`[Error] ${result.data.stderr}`);
+        if (result.data.compile_output) output.push(`[Compiler Error] ${result.data.compile_output}`);
+        output.push(`[Finished in ${result.data.time || 0}s, Memory: ${result.data.memory || 0}KB]`);
 
-        let output = [];
-        if (resultResponse.data.stdout) {
-          output.push(...resultResponse.data.stdout.split('\n'));
-        }
-        if (resultResponse.data.stderr) {
-          output.push(...`[Error] ${resultResponse.data.stderr}`.split('\n'));
-        }
-        if (resultResponse.data.compile_output) {
-          output.push(...`[Compiler Error] ${resultResponse.data.compile_output}`.split('\n'));
-        }
-
-        output.push(`[Finished in ${resultResponse.data.time || 0}s, Memory: ${resultResponse.data.memory || 0}KB]`);
         socket.emit('CODE_OUTPUT', { output });
       };
 
-      checkStatus();
-    } catch (error) {
-      let errorMessage = 'An API error occurred.';
-      if (error.response && error.response.data) {
-        errorMessage = error.response.data.error || JSON.stringify(error.response.data);
-      }
-      console.error('API Error:', errorMessage);
-      socket.emit('CODE_OUTPUT', { output: [errorMessage] });
+      poll();
+    } catch (err) {
+      console.error('Judge0 error:', err.message);
+      socket.emit('CODE_OUTPUT', { output: ['Execution failed.'] });
+    }
+  });
+
+  socket.on('CHAT_MESSAGE', ({ roomId, username, message }) => {
+    io.in(roomId).emit('CHAT_MESSAGE', {
+      username,
+      message,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  socket.on('KICK_USER', ({ socketId }) => {
+    const kicked = io.sockets.sockets.get(socketId);
+    if (kicked) {
+      kicked.emit('KICKED');
+      kicked.disconnect();
     }
   });
 
@@ -207,7 +164,6 @@ io.on('connection', (socket) => {
       });
     });
     delete userSocketMap[socket.id];
-    socket.leave();
   });
 });
 
