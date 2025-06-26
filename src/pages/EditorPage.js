@@ -1,5 +1,3 @@
-// src/pages/EditorPage.js
-
 import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -7,7 +5,7 @@ import { socket } from '../socket';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import LogoImg from '../Images/img.svg';
-import './EditorPage.css'; // Import the CSS file
+import './EditorPage.css'; 
 
 export default function EditorPage() {
   const codeRef = useRef({});
@@ -34,7 +32,7 @@ export default function EditorPage() {
       }
       setClients(clients);
 
-      // Emit latest code for all files
+      //latest code send
       if (codeRef.current && typeof codeRef.current === 'object') {
         for (const [fileName, code] of Object.entries(codeRef.current)) {
           socket.emit('CODE_CHANGE', { roomId, fileName, code });
@@ -99,7 +97,7 @@ export default function EditorPage() {
     <div className="mainWrap">
       <div className="aside">
         <div className="asideInner">
-          {/* NEW: App Logo and Name Header */}
+         
           <div className="app-header">
             <img className="logo-image" src={LogoImg} alt="CadenceCode Logo" />
             <h1 className="app-name">CadenceCode</h1>

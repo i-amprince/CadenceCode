@@ -4,8 +4,8 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import LogoImg from '../Images/img.svg'; // Your logo image import
-import styles from './Home.module.css'; // Your CSS module import
+import LogoImg from '../Images/img.svg'; 
+import styles from './Home.module.css';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ export default function Home() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // ✅ Step 1: Generate room ID only (no DB write)
+   //geenerating room ID 
     const generateRoomId = (e) => {
         e.preventDefault();
         const id = uuidV4();
@@ -21,7 +21,7 @@ export default function Home() {
         toast.success(`Room ID Generated`);
     };
 
-    // ✅ Step 2: Create room in DB with validations
+    //Create room 
     const createNewRoom = async (e) => {
         e.preventDefault();
 
@@ -79,7 +79,8 @@ export default function Home() {
     return (
         <div className={styles.homePageWrapper}>
             <div className={styles.formWrapper}>
-                {/* App Logo and Name Header - Consistent with Login.js */}
+                
+
                 <div className={styles.appHeader}>
                     <img
                         className={styles.homePageLogo}
@@ -123,7 +124,8 @@ export default function Home() {
                         Join
                     </button>
                     <div className={styles.createInfo}>
-                        {/* Corrected: Comment moved outside the className attribute */}
+                       
+                       
                         <button
                             className={`${styles.btn} ${styles.generateBtn}`}
                             onClick={generateRoomId}

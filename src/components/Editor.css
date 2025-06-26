@@ -1,6 +1,3 @@
-/* ==== Professional Code Editor Styling ==== */
-
-/* Root Container with improved grid layout */
 .editorContainer {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -11,7 +8,6 @@
   position: relative;
 }
 
-/* Subtle background pattern for texture */
 .editorContainer::before {
   content: '';
   position: absolute;
@@ -26,7 +22,6 @@
   z-index: 0;
 }
 
-/* ==== Main Editor Section ==== */
 .editorMain {
   display: flex;
   flex-direction: column;
@@ -41,7 +36,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* ==== Enhanced Header Row ==== */
 .headerRow {
   display: flex;
   justify-content: space-between;
@@ -69,7 +63,6 @@
     transparent 100%);
 }
 
-/* ==== Professional File Tabs ==== */
 .fileTabsWrapper {
   display: flex;
   align-items: center;
@@ -203,7 +196,6 @@
   transform: translateY(0);
 }
 
-/* ==== Enhanced Action Buttons ==== */
 .actionButtons {
   display: flex;
   align-items: center;
@@ -275,7 +267,6 @@
   box-shadow: 0 0 0 3px rgba(74, 238, 136, 0.1);
 }
 
-/* Fix dropdown options styling */
 .checkpointSelect option {
   background: #2a2a2a;
   color: #fff;
@@ -298,7 +289,7 @@
   color: #888;
 }
 
-/* ==== Enhanced Editor Area ==== */
+
 .editorPane {
   flex: 1;
   overflow: hidden;
@@ -319,7 +310,6 @@
   box-shadow: inset 0 0 20px rgba(74, 238, 136, 0.05);
 }
 
-/* ==== Professional Output Console ==== */
 .outputWrap {
   background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
   color: #e0e0e0;
@@ -365,7 +355,6 @@
   border-left-color: #4aee88;
 }
 
-/* ==== Enhanced Chat Panel ==== */
 .chatPanel {
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   color: #fff;
@@ -531,7 +520,7 @@
   transform: translateY(0);
 }
 
-/* ==== Enhanced Scrollbar Styling ==== */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -556,7 +545,7 @@
   background: rgba(26, 26, 26, 0.5);
 }
 
-/* ==== Responsive Design ==== */
+
 @media (max-width: 1200px) {
   .editorContainer {
     grid-template-columns: 1fr 280px;
@@ -605,7 +594,7 @@
   }
 }
 
-/* ==== Loading States and Animations ==== */
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -630,7 +619,6 @@
   animation: slideIn 0.2s ease-out;
 }
 
-/* ==== Focus and Accessibility ==== */
 .runBtn:focus,
 .saveBtn:focus,
 .chatSendBtn:focus,
@@ -646,7 +634,7 @@
   box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.5);
 }
 
-/* ==== High Contrast Mode Support ==== */
+
 @media (prefers-contrast: high) {
   .fileTab.active {
     background: #4aee88;
@@ -662,7 +650,7 @@
   }
 }
 
-/* ==== Reduced Motion Support ==== */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

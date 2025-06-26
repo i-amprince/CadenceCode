@@ -1,101 +1,97 @@
-/* Styling for the main page wrapper, similar to homePageWrapper */
 .loginPageWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    color: #fff; /* White text for overall page */
-    background: #1c1c1c; /* Dark background matching the theme */
+    color: #fff; 
+    background: #1c1c1c; 
     font-family: 'Arial', sans-serif;
 }
 
-/* Styling for the form container, similar to formWrapper */
+
 .loginFormWrapper {
-    background: #282a36; /* Dark background for the form card */
+    background: #282a36; 
     padding: 2rem;
     border-radius: 10px;
     width: 100%;
-    max-width: 450px; /* Max width for the form */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Deep shadow for a lifted effect */
-    text-align: center; /* Center content within the form */
-    display: flex; /* Use flexbox for internal alignment */
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center items horizontally within the flex container */
+    max-width: 450px; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    text-align: center; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
 }
 
-/* NEW: Container for the app logo and name */
+
 .appHeader {
-    display: flex; /* Make it a flex container */
-    align-items: center; /* Vertically align items in the center */
-    gap: 15px; /* Space between logo and app name */
-    margin-bottom: 2rem; /* Space below the header */
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    margin-bottom: 2rem; 
 }
 
-/* NEW: Styling for the logo image, similar to homePageLogo */
+
 .loginPageLogo {
-    height: 60px; /* Adjusted height for the login page */
-    /* No display: block; margin: auto; here as it's part of a flex container */
+    height: 60px; 
+    
 }
 
-/* NEW: Styling for the app name text */
+
 .appName {
-    font-size: 2.2rem; /* Large, prominent size */
+    font-size: 2.2rem;
     font-weight: bold;
-    color: #4aee88; /* Use your accent green color */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Stronger shadow for the app name */
-    letter-spacing: 1px; /* Slightly spread letters */
+    color: #4aee88;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); 
+    letter-spacing: 1px; 
 }
 
-
-/* Styling for the main label/heading, similar to mainLabel */
 .mainLabel {
     margin-bottom: 1.5rem;
     font-weight: bold;
-    font-size: 1.8rem; /* Larger font size for prominence */
-    color: #f8f8f2; /* Light text for good contrast */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+    font-size: 1.8rem; 
+    color: #f8f8f2; 
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Styling for the Google Login button */
 .googleLoginBtn {
     border: none;
     border-radius: 5px;
-    font-size: 1.1rem; /* Slightly larger font for the button text */
+    font-size: 1.1rem; 
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease-in-out; /* Smooth transitions for hover effects */
-    padding: 12px 25px; /* Generous padding for a clickable area */
-    background: #4aee88; /* Vibrant green, matching the 'Join' button in Home.js */
-    color: #1c1c1c; /* Dark text for contrast against the green background */
-    width: 100%; /* Make the button full-width of its container */
-    max-width: 300px; /* Limit button width for better aesthetics */
-    display: flex; /* Use flexbox for icon and text alignment */
-    align-items: center; /* Vertically align icon and text */
-    justify-content: center; /* Center content horizontally */
-    gap: 12px; /* Space between the Google icon and text */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Initial shadow */
+    transition: all 0.3s ease-in-out;
+    padding: 12px 25px; 
+    background: #4aee88; 
+    color: #1c1c1c; 
+    width: 100%; 
+    max-width: 300px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 12px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }
 
 .googleLoginBtn:hover {
-    background: #3ac672; /* Slightly darker green on hover */
-    transform: translateY(-2px); /* Lift effect on hover */
-    box-shadow: 0 6px 15px rgba(74, 238, 136, 0.4); /* Enhanced shadow on hover */
+    background: #3ac672; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 15px rgba(74, 238, 136, 0.4); 
 }
 
-/* Styling for the Google icon within the button */
+
 .googleIcon {
-    font-size: 1.2em; /* Adjust icon size relative to button text */
+    font-size: 1.2em; 
 }
 
-/* Optional: If you want to include a small footer like Home.js */
+
 .footer {
-    position: absolute; /* Changed to absolute for proper positioning in this context */
+    position: absolute; 
     bottom: 0;
     width: 100%;
     text-align: center;
     padding-bottom: 10px;
     color: #a9a9a9;
-    background: #1c1c1c; /* Match page background */
+    background: #1c1c1c; 
     padding-top: 10px;
 }
 

@@ -8,7 +8,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './pages/Home';
 import EditorPage from './pages/EditorPage';
 import Login from './pages/Login';
-import ProtectedRoute from './components/ProtectedRoute'; // ✅ only this one
+import ProtectedRoute from './components/ProtectedRoute'; //to not let access without login
 
 const router = createBrowserRouter([
   {

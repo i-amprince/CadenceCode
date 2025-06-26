@@ -3,9 +3,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 import toast from 'react-hot-toast';
-import styles from './Login.module.css'; // Import the CSS module
+import styles from './Login.module.css'; 
 
-import LogoImg from '../Images/img.svg'; // Import your logo image
+import LogoImg from '../Images/img.svg'; 
 
 export default function Login() {
   const handleSuccess = async (credentialResponse) => {
@@ -20,7 +20,7 @@ export default function Login() {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(decoded));
       toast.success('Logged in!');
-      window.location.href = '/'; // Redirect to home/dashboard
+      window.location.href = '/'; 
     } catch (err) {
       console.error(err);
       toast.error('Login failed');

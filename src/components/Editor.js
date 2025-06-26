@@ -86,7 +86,7 @@ export default function Editor({ roomId, onCodeChange }) {
       toast.error(message);
     });
 
-    // 🚀 New: Listen for checkpoint update broadcast
+   
     socket.on('CHECKPOINT_UPDATED', async () => {
       await fetchCheckpoint();
       toast.success('Checkpoints updated');
@@ -103,7 +103,7 @@ export default function Editor({ roomId, onCodeChange }) {
       socket.off('NEW_FILE_ADDED');
       socket.off('FILE_DELETED');
       socket.off('ERROR');
-      socket.off('CHECKPOINT_UPDATED'); // cleanup
+      socket.off('CHECKPOINT_UPDATED'); 
     };
   }, [roomId]);
 
@@ -147,7 +147,7 @@ export default function Editor({ roomId, onCodeChange }) {
     socket.emit('SAVE_CODE', { roomId, fileName: currentFile, code });
 
     const cp = { fileName: currentFile, code, savedAt: new Date().toISOString() };
-    
+
     await fetchCheckpoint();
   };
 
@@ -212,7 +212,7 @@ export default function Editor({ roomId, onCodeChange }) {
     <div className="editorContainer">
       <div className="editorMain">
         <div className="headerRow">
-          {/* --- File Tabs Section --- */}
+         
           <div className="fileTabsWrapper">
             <div className="fileTabs">
               {files.map(f => (
@@ -227,7 +227,7 @@ export default function Editor({ roomId, onCodeChange }) {
                     <button
                       className="fileDeleteBtn"
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent tab selection when deleting
+                        e.stopPropagation(); 
                         handleDeleteFile(f.name);
                       }}
                       title="Delete file"
@@ -244,7 +244,7 @@ export default function Editor({ roomId, onCodeChange }) {
             </button>
           </div>
 
-          {/* --- Action Buttons Section --- */}
+         
           <div className="actionButtons">
             <button className="runBtn" onClick={run}>▶ Run</button>
             <button className="saveBtn" onClick={save}>💾 Save</button>
@@ -259,7 +259,7 @@ export default function Editor({ roomId, onCodeChange }) {
                   onEdit(cp.code);
                   socket.emit('CODE_CHANGE', { roomId, fileName: currentFile, code: cp.code });
                 }
-                e.target.value = ""; // Reset select
+                e.target.value = ""; 
               }}
             >
               <option value="" disabled>🕒 Restore</option>
