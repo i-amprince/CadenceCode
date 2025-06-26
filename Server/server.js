@@ -7,17 +7,19 @@ const Code = require('./models/Code');
 const authRoutes = require('./routes/Auth');
 const roomRoutes = require('./routes/room');
 
+require('dotenv').config();
+
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
 const cors = require('cors');
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/room', roomRoutes);
 
-mongoose.connect('mongodb://localhost:27017/collab-editor')
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
@@ -101,8 +103,8 @@ io.on('connection', (socket) => {
       params: { base64_encoded: 'false', fields: '*' },
       headers: {
         'content-type': 'application/json',
-        'X-RapidAPI-Key': 'd79b06c1ccmshf3d09d3d252ce64p17a1c7jsna1919a91c387',
-        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
+        'X-RapidAPI-Key': process.env.JUDGE0_API_KEY,
+        'X-RapidAPI-Host': process.env.JUDGE0_API_HOST,
       },
       data: { language_id: languageId || 93, source_code: code },
     };

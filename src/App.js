@@ -35,7 +35,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="533671388387-m71d70069k6rklr4l8tod7pnosb1770c.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId= {process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <Toaster
         position="top-right"
         toastOptions={{
