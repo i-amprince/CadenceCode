@@ -11,7 +11,7 @@
 /* --- Sidebar Styling --- */
 .aside {
     background: #1c1c1c;
-    padding: 16px;
+    padding: 16px; /* 16px padding on left/right means 230 - 32 = 198px content area */
     color: #fff;
     display: flex; /* Key for positioning the buttons at the bottom */
     flex-direction: column;
@@ -21,14 +21,39 @@
     flex: 1; /* This is the magic! It makes this div grow and push the buttons down */
 }
 
-.logo {
-    border-bottom: 1px solid #444;
-    padding-bottom: 1rem;
+/* App Header - holds the logo and name */
+.app-header {
+    display: flex; /* Make it a flex container */
+    align-items: center; /* Vertically align items in the center */
+    gap: 8px; /* Slightly reduced space between logo and app name to save horizontal space */
+    border-bottom: 1px solid #444; /* Moved border from original .logo */
+    padding-bottom: 1rem; /* Moved padding from original .logo */
+    margin-bottom: 1.5rem; /* Space below the header */
+    /* Ensure content fits by allowing it to shrink */
+    min-width: 0; /* Allows content inside flex item to shrink below its intrinsic size */
 }
 
-.logoImage {
-    height: 60px;
+/* Adjusted: Styling for the logo image */
+.logo-image {
+    height: 45px; /* Reduced height slightly more to save space */
+    /* No display: block; margin: auto; here as it's part of a flex container */
+    flex-shrink: 0; /* Prevent the image from shrinking */
 }
+
+/* Adjusted: Styling for the app name text */
+.app-name {
+    font-size: 1.25rem; /* Further reduced font size to ensure fit */
+    font-weight: bold;
+    color: #4aee88; /* Your accent green color */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+    letter-spacing: 0.5px;
+    margin: 0; /* Remove default h1 margin */
+    /* Ensure text fits on one line and truncates if it overflows */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Display "..." for overflowed text */
+}
+
 
 .asideInner h3 {
     margin-top: 1.5rem;

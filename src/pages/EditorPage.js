@@ -7,7 +7,7 @@ import { socket } from '../socket';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import LogoImg from '../Images/img.svg';
-import './EditorPage.css';
+import './EditorPage.css'; // Import the CSS file
 
 export default function EditorPage() {
   const codeRef = useRef({});
@@ -99,9 +99,12 @@ export default function EditorPage() {
     <div className="mainWrap">
       <div className="aside">
         <div className="asideInner">
-          <div className="logo">
-            <img className="logoImage" src={LogoImg} alt="Sync Code Logo" />
+          {/* NEW: App Logo and Name Header */}
+          <div className="app-header">
+            <img className="logo-image" src={LogoImg} alt="CadenceCode Logo" />
+            <h1 className="app-name">CadenceCode</h1>
           </div>
+
           <h3>Connected</h3>
           <div className="clientsList">
             {clients.map((client) => (

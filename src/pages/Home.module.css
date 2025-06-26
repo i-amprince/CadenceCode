@@ -4,38 +4,61 @@
     justify-content: center;
     min-height: 100vh;
     color: #fff;
-    background: #1c1c1c; 
+    background: #1c1c1c;
     font-family: 'Arial', sans-serif;
 }
 
 .formWrapper {
-    background: #282a36; 
+    background: #282a36;
     padding: 2rem;
     border-radius: 10px;
     width: 100%;
     max-width: 450px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    display: flex; /* Ensure formWrapper is a flex container */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
 }
 
-/* Logo styling */
+/* NEW: Container for the app logo and name (consistent with Login.module.css) */
+.appHeader {
+    display: flex; /* Make it a flex container */
+    align-items: center; /* Vertically align items in the center */
+    gap: 15px; /* Space between logo and app name */
+    margin-bottom: 2rem; /* Space below the header, pushing mainLabel down */
+}
+
+/* Logo styling - now part of a flex container, so 'display: block' and 'margin: auto' are not needed */
 .homePageLogo {
-    height: 80px;
-    display: block;
-    margin: 0 auto 1.5rem; /* Center the logo */
+    height: 80px; /* Keep its original size for Home page */
+    /* If you had 'display: block;' or 'margin: 0 auto;' here, remove them */
 }
 
-/* "Enter Invitation..." label */
+/* NEW: App Name styling (consistent with Login.module.css, but adjusted font-size for Home) */
+.appName {
+    font-size: 2.5rem; /* Larger for the home page prominence */
+    font-weight: bold;
+    color: #4aee88; /* Your accent green color */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Stronger shadow for the app name */
+    letter-spacing: 1px; /* Slightly spread letters */
+    margin: 0; /* Remove default h1 margin for clean alignment within flex */
+}
+
+/* "Join or Create a ROOM" label */
 .mainLabel {
     margin-bottom: 1.5rem;
     font-weight: bold;
     text-align: center;
     font-size: 1.2rem;
+    color: #f8f8f2; /* Ensure good contrast */
 }
 
 /* Container for all inputs and buttons */
 .inputGroup {
     display: flex;
     flex-direction: column;
+    width: 100%; /* Ensure input group takes full width within formWrapper */
+    /* align-items: center;  <-- Remove this, inputs are already full width */
 }
 
 /* Styling for the input fields */
@@ -49,6 +72,8 @@
     font-size: 16px;
     color: #f8f8f2; /* Light text color */
     transition: border-color 0.3s ease-in-out;
+    width: 100%; /* Make input boxes full width */
+    box-sizing: border-box; /* Include padding in width */
 }
 
 .inputBox::placeholder {
@@ -75,35 +100,55 @@
     background: #4aee88; /* Vibrant green */
     color: #1c1c1c; /* Dark text for contrast */
     width: 100%; /* Make button full-width of the form group */
+    margin-top: 0.5rem; /* Add some space above it */
 }
 
 .joinBtn:hover {
     background: #3ac672; /* Slightly darker green on hover */
 }
 
-/* "Don't have an invite?" text */
+/* "Don't have an invite?" text and buttons container */
 .createInfo {
     margin-top: 1rem;
     text-align: center;
     color: #bd93f9; /* A nice accent color */
-    display: flex;
-    gap: 10px;
+    display: flex; /* Make it a flex container */
+    gap: 10px; /* Space between the two buttons */
+    width: 100%; /* Ensure this container also takes full width */
+    justify-content: space-between; /* Distribute space between buttons */
 }
 
-/* The "new room" link */
-.createBtn {
-    background: #e2e5e3;
-    color: #3ac672;
+/* The "new room" link (Generate Room ID) button */
+.generateBtn { /* NEW: Specific class for Generate Room ID button */
+    background: #e2e5e3; /* Changed to a lighter grey for differentiation */
+    color: #3ac672; /* Keep accent color for text */
     border: 2px solid #3ac672;
+    flex: 1; /* Allow buttons to grow and fill space */
+    font-size: 16px; /* Consistent font size */
+    padding: 10px; /* Adjusted padding for better fit */
+}
+.generateBtn:hover {
+    background: #d1d4d2; /* Darken on hover */
+    border-color: #2e9f5e; /* Darken border on hover */
+}
+
+
+/* The "Create Room" button */
+.createBtn {
+    background: #e0a163; /* Keep your existing orange for Create Room */
+    color: white;
+    border: 2px solid #e0a163; /* Match border to background */
     flex: 1;
-    font-size: 18px;    
+    font-size: 16px; /* Consistent font size */
+    padding: 10px; /* Adjusted padding for better fit */
 }
 
 .createBtn:hover {
-    background: #e0a163;
-    color: white;
-    border-color: rgb(188, 75, 75);
+    background: #cc9400; /* Darker orange on hover */
+    border-color: #cc9400;
 }
+
+
 /* Footer styling */
 .footer {
     position: fixed;
@@ -112,9 +157,50 @@
     text-align: center;
     padding-bottom: 10px;
     color: #a9a9a9;
+    background: #1c1c1c; /* Ensure background matches page */
+    padding-top: 10px; /* Add some padding on top */
 }
 
 .footerLink {
     color: #4aee88;
     text-decoration: none;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+    .formWrapper {
+        padding: 1.5rem;
+    }
+
+    .appHeader {
+        flex-direction: column; /* Stack logo and name vertically on small screens */
+        gap: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .appName {
+        font-size: 2rem;
+    }
+
+    .homePageLogo {
+        height: 70px;
+    }
+
+    .mainLabel {
+        font-size: 1rem;
+    }
+
+    .inputBox {
+        font-size: 14px; /* Smaller input font on small screens */
+    }
+
+    .btn {
+        font-size: 14px; /* Smaller button font on small screens */
+        padding: 10px;
+    }
+
+    .createInfo {
+        flex-direction: column; /* Stack create room buttons vertically */
+        gap: 8px;
+    }
 }
