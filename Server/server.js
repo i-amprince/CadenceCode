@@ -91,6 +91,16 @@ io.on('connection', (socket) => {
     }
   });
 
+    //adeed now 
+  socket.on('KICK_USER', ({ socketId }) => {
+  const kickedSocket = io.sockets.sockets.get(socketId);
+  if (kickedSocket) {
+    kickedSocket.emit('KICKED');
+    kickedSocket.disconnect();
+  }
+});
+
+
   socket.on('SYNC_CODE', ({ socketId, code }) => {
     io.to(socketId).emit('CODE_CHANGE', { code });
   });
@@ -103,7 +113,7 @@ io.on('connection', (socket) => {
       params: { base64_encoded: 'false', fields: '*' },
       headers: {
         'content-type': 'application/json',
-        'X-RapidAPI-Key': 'your-rapidapi-key',
+        'X-RapidAPI-Key': 'd79b06c1ccmshf3d09d3d252ce64p17a1c7jsna1919a91c387',
         'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
       },
       data: {
@@ -122,7 +132,7 @@ io.on('connection', (socket) => {
           url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
           params: { base64_encoded: 'false', fields: '*' },
           headers: {
-            'X-RapidAPI-Key': 'your-rapidapi-key',
+            'X-RapidAPI-Key': 'd79b06c1ccmshf3d09d3d252ce64p17a1c7jsna1919a91c387',
             'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
           },
         };

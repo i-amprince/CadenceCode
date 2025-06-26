@@ -118,6 +118,7 @@ const Editor = ({ roomId, onCodeChange }) => {
                     className="checkpointDropdown"
                     onChange={(e) => {
                         const index = e.target.value;
+                        if (index === 'current') restoreCheckpoint(code);
                         if (index !== '') restoreCheckpoint(index);
                     }}
                 >

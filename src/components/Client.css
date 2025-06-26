@@ -1,22 +1,32 @@
 /* src/components/Client.css */
 
 .client {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .username {
-    margin-left: 10px;
-}
-
-.currentUser .username {
-    font-weight: bold;
+  margin-left: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 .youLabel {
-    color: #7e8185;
-    font-size: 0.9em;
-    font-weight: normal;
+  color: gray;
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
+.kickBtn {
+  margin-left: 8px;
+  color: red;
+  cursor: pointer;
+  display: none;
+  font-size: 0.9em;
+}
+
+.client:hover .kickBtn {
+  display: inline;
 }

@@ -6,7 +6,7 @@ const CodeSchema = new mongoose.Schema({
     roomId: { type: String, required: true, unique: true },
     code: { type: String, default: '' },
     password: { type: String },
-    creator: { type: String },
+    creator: { type: String, required: true }, // Store the email of room creator
     checkpoints: [
         {
             code: String,
