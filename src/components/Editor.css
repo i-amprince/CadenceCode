@@ -1,323 +1,674 @@
-/* General Layout */
+/* ==== Professional Code Editor Styling ==== */
+
+/* Root Container with improved grid layout */
 .editorContainer {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 320px;
   height: 100vh;
-  background-color: #1a1a1a; /* Deeper background */
-  color: #e0e0e0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
+  position: relative;
 }
 
+/* Subtle background pattern for texture */
+.editorContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(74, 238, 136, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(74, 238, 136, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==== Main Editor Section ==== */
 .editorMain {
-  flex: 1; /* Allows editor to take up available space */
   display: flex;
   flex-direction: column;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow on the main editor area */
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 0 12px 0 0;
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-/* Header Row (Top Bar) */
+/* ==== Enhanced Header Row ==== */
 .headerRow {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px; /* Increased gap for better spacing */
-  padding: 12px 20px; /* More horizontal padding */
-  background: #20232a; /* Slightly lighter header background than main editor */
-  border-bottom: 1px solid #333;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #2a2a2a 0%, #262626 100%);
+  border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+  gap: 16px;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.headerRow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.5) 50%, 
+    transparent 100%);
+}
+
+/* ==== Professional File Tabs ==== */
+.fileTabsWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  max-width: 65%;
+  padding: 2px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.fileTabsWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.fileTabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  padding: 0 4px;
+}
+
+.fileTab {
+  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+  color: #e0e0e0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 180px;
+}
+
+.fileTab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(74, 238, 136, 0.1), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.fileTab:hover::before {
+  left: 100%;
+}
+
+.fileTab:hover {
+  background: linear-gradient(135deg, #444 0%, #3a3a3a 100%);
+  border-color: rgba(74, 238, 136, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.fileTab.active {
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
+  font-weight: 600;
+  border-color: #4aee88;
+  box-shadow: 
+    0 4px 16px rgba(74, 238, 136, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.fileName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.fileDeleteBtn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
   flex-shrink: 0;
 }
 
-.headerRow select,
-.headerRow button {
-  padding: 8px 15px; /* Consistent padding */
-  border-radius: 6px; /* Slightly more rounded corners */
-  border: 1px solid #444; /* Consistent border for controls */
-  font-size: 14px;
+.fileDeleteBtn:hover {
+  background: rgba(255, 85, 85, 0.2);
+  color: #ff5555;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.fileTab.active .fileDeleteBtn:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: #1a1a1a;
+}
+
+.addFileBtn {
+  margin-left: 12px;
+  padding: 6px 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
   cursor: pointer;
-  transition: all 0.2s ease; /* Smooth transitions for hover effects */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for buttons/selects */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
 }
 
-.headerRow select {
-  background: #34373e;
-  color: #e0e0e0;
-  appearance: none; /* Remove default select arrow */
-  background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 30px; /* Make space for the custom arrow */
+.addFileBtn:hover {
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
 }
 
-.headerRow select:hover {
-  border-color: #007acc;
+.addFileBtn:active {
+  transform: translateY(0);
 }
 
-.headerRow button {
-  background: #007acc; /* Primary blue for actions */
-  color: #fff;
-  font-weight: 600; /* Slightly bolder text */
+/* ==== Enhanced Action Buttons ==== */
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.headerRow button:hover {
-  background: #005fa3;
-  transform: translateY(-2px); /* More noticeable lift on hover */
-  box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3); /* Blue shadow on hover */
-}
-
-/* Specific Button Styles */
-.newFileBtn {
-    background-color: #28a745 !important; /* Green for new file */
-}
-.newFileBtn:hover {
-    background-color: #218838 !important;
-    box-shadow: 0 44px 8px rgba(40, 167, 69, 0.3) !important;
+.runBtn,
+.saveBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .runBtn {
-    background-color: #e5a400 !important; /* Orange for run */
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
 }
+
 .runBtn:hover {
-    background-color: #cc9400 !important;
-    box-shadow: 0 4px 8px rgba(229, 164, 0, 0.3) !important;
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
 }
 
 .saveBtn {
-    background-color: #007acc !important; /* Blue for save */
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }
+
 .saveBtn:hover {
-    background-color: #005fa3 !important;
-    box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3) !important;
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
 }
 
-/* Editor Pane */
-.editorPane {
-  flex: 1;
-  overflow: auto; /* Enable scrollbars */
-  border: 1px solid #333;
-  border-top: none; /* Remove top border as header has one */
-  background: #1e1e1e; /* Match CodeMirror background */
-  display: flex; /* Crucial: Make this a flex container */
-  flex-direction: column; /* Crucial: Stack children vertically */
+.checkpointSelect {
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-/* CodeMirror Specific Overrides */
-.cm-editor {
-  flex: 1; /* Crucial: Make CodeMirror component fill remaining vertical space */
-  height: 100% !important; /* Ensure CodeMirror takes full height of its parent */
-  width: 100% !important; /* Ensure CodeMirror takes full width of its parent */
-  font-family: 'Cascadia Code', monospace !important;
-  font-size: 16px; /* Slightly larger font for readability */
-  padding: 15px; /* More padding inside the editor */
-  box-sizing: border-box; /* Include padding in height calculations */
-  background-color: #1e1e1e !important; /* Ensure background consistency */
-  outline: none !important; /* Remove default browser focus outline */
-  /* Remove any min-width if it was here, as it could prevent stretching */
+.checkpointSelect:hover {
+  background: linear-gradient(135deg, #444 0%, #3a3a3a 100%);
+  border-color: rgba(74, 238, 136, 0.3);
 }
 
-/* These classes are internal to CodeMirror. We may need to target them if the above isn't enough */
-/* This is often where the 'blank' space issue lies. */
-.cm-scroller {
-    flex: 1; /* Make the scroller fill available space */
-    width: 100% !important; /* Ensure scroller takes full width */
-    height: 100% !important; /* Ensure scroller takes full height */
-    overflow: auto !important; /* Allow internal scrolling if content overflows */
-    box-sizing: border-box; /* Include padding in dimensions */
+.checkpointSelect:focus {
+  outline: none;
+  border-color: #4aee88;
+  box-shadow: 0 0 0 3px rgba(74, 238, 136, 0.1);
 }
 
-.cm-content {
-    min-height: 100%; /* Ensure content area is at least full height */
-    width: 100%; /* Ensure content area is full width */
-    box-sizing: border-box;
+/* Fix dropdown options styling */
+.checkpointSelect option {
+  background: #2a2a2a;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
 }
 
-/* Output Section */
-.outputWrap {
-  padding: 15px 20px; /* Consistent padding */
-  background: #0f0f0f; /* Even darker for output console */
-  height: 180px;
-  overflow-y: auto;
-  border-top: 1px solid #333;
-  flex-shrink: 0;
-  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+.checkpointSelect option:hover {
+  background: #4aee88;
+  color: #1a1a1a;
 }
 
-.outputConsole {
-  font-family: 'Cascadia Code', monospace;
-  font-size: 14px; /* Slightly larger output font */
-  color: #00ff00; /* Bright green for success */
-  white-space: pre-wrap;
-  word-break: break-word;
+.checkpointSelect option:checked {
+  background: #4aee88;
+  color: #1a1a1a;
 }
 
-.outputConsole > div:first-child:not([class]) {
+.checkpointSelect option:disabled {
+  background: #333;
   color: #888;
 }
 
-/* Chat Panel */
+/* ==== Enhanced Editor Area ==== */
+.editorPane {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: #1e1e1e;
+  border-radius: 0 0 8px 8px;
+}
+
+.cm-editor {
+  height: 100%;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  line-height: 1.6;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+  box-shadow: inset 0 0 20px rgba(74, 238, 136, 0.05);
+}
+
+/* ==== Professional Output Console ==== */
+.outputWrap {
+  background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
+  color: #e0e0e0;
+  padding: 16px;
+  height: 160px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-size: 0.875rem;
+  border-top: 1px solid rgba(74, 238, 136, 0.2);
+  position: relative;
+  backdrop-filter: blur(5px);
+}
+
+.outputWrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.5) 50%, 
+    transparent 100%);
+}
+
+.outputConsole {
+  margin: 0;
+  padding: 0;
+}
+
+.outputConsole > div {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  padding: 2px 0;
+  border-left: 2px solid transparent;
+  padding-left: 8px;
+  transition: all 0.2s ease;
+}
+
+.outputConsole > div:hover {
+  background: rgba(74, 238, 136, 0.05);
+  border-left-color: #4aee88;
+}
+
+/* ==== Enhanced Chat Panel ==== */
 .chatPanel {
-  width: 320px; /* Slightly wider chat panel */
-  min-width: 280px; /* Ensure it doesn't get too small */
-  background: #282c34;
-  border-left: 1px solid #333;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  color: #fff;
   display: flex;
   flex-direction: column;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2); /* Shadow for chat panel */
+  border-left: 1px solid rgba(74, 238, 136, 0.2);
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(10px);
+  border-radius: 12px 0 0 0;
+}
+
+.chatPanel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.5) 50%, 
+    transparent 100%);
 }
 
 .chatHeader {
-  padding: 15px; /* More padding */
-  background: #20232a; /* Match header background */
-  border-bottom: 1px solid #333;
-  font-weight: bold;
+  padding: 16px;
+  background: linear-gradient(135deg, #262626 0%, #222 100%);
+  font-weight: 600;
+  font-size: 1rem;
   text-align: center;
-  color: #c9d1d9; /* Lighter header text */
-  font-size: 1.1em; /* Slightly larger font */
+  border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+  position: relative;
+  color: #4aee88;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.chatHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.5) 50%, 
+    transparent 100%);
 }
 
 .chatMessages {
   flex: 1;
-  padding: 15px; /* More padding */
   overflow-y: auto;
-  word-wrap: break-word;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.875rem;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 238, 136, 0.3) transparent;
+}
+
+.chatMessages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background: rgba(74, 238, 136, 0.3);
+  border-radius: 3px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 238, 136, 0.5);
 }
 
 .chatMessage {
-  margin-bottom: 10px; /* More spacing between messages */
-  line-height: 1.5; /* Better readability */
+  word-wrap: break-word;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border-left: 3px solid rgba(74, 238, 136, 0.3);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.chatMessage:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: #4aee88;
+  transform: translateX(2px);
 }
 
 .chatMessage strong {
-  color: #9cdcfe;
+  color: #4aee88;
   font-weight: 600;
-  margin-right: 8px; /* More space after username */
 }
 
 .chatMessage span {
-  color: #d4d4d4;
+  color: #e0e0e0;
+  line-height: 1.4;
 }
 
 .chatInputWrap {
   display: flex;
-  padding: 15px; /* More padding */
-  background: #20232a; /* Match header background */
-  border-top: 1px solid #333;
-  flex-shrink: 0;
+  padding: 16px;
+  border-top: 1px solid rgba(74, 238, 136, 0.2);
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
 }
 
 .chatInput {
   flex: 1;
-  padding: 10px 12px; /* Increased padding */
-  background: #3b3e46;
-  border: 1px solid #555;
-  border-radius: 6px;
-  color: #e0e0e0;
-  margin-right: 10px;
-  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(34, 34, 34, 0.8);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 400;
   outline: none;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); /* Inner shadow for input */
-}
-
-.chatInput::placeholder {
-  color: #999; /* Darker placeholder */
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
 .chatInput:focus {
-    border-color: #007acc; /* Highlight border on focus */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(0, 122, 204, 0.25); /* Subtle glowing effect */
+  border-color: #4aee88;
+  background: rgba(34, 34, 34, 0.95);
+  box-shadow: 
+    0 0 0 3px rgba(74, 238, 136, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chatInput::placeholder {
+  color: rgba(224, 224, 224, 0.5);
 }
 
 .chatSendBtn {
-  background: #007acc;
-  color: white;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
   border: none;
-  padding: 10px 18px; /* Larger send button */
-  border-radius: 6px;
-  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
 }
 
 .chatSendBtn:hover {
-  background: #005fa3;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3);
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
 }
 
-
-/* --- Custom Scrollbar Styles (Applied to all scrollable areas) --- */
-.editorPane::-webkit-scrollbar,
-.outputWrap::-webkit-scrollbar,
-.chatMessages::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.chatSendBtn:active {
+  transform: translateY(0);
 }
 
-.editorPane::-webkit-scrollbar-track,
-.outputWrap::-webkit-scrollbar-track,
-.chatMessages::-webkit-scrollbar-track {
-  background: #282c34;
-  border-radius: 5px;
+/* ==== Enhanced Scrollbar Styling ==== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.editorPane::-webkit-scrollbar-thumb,
-.outputWrap::-webkit-scrollbar-thumb,
-.chatMessages::-webkit-scrollbar-thumb {
-  background: #6a6a6a; /* Slightly lighter grey for better visibility */
-  border-radius: 5px;
+::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.5);
+  border-radius: 4px;
 }
 
-.editorPane::-webkit-scrollbar-thumb:hover,
-.outputWrap::-webkit-scrollbar-thumb:hover,
-.chatMessages::-webkit-scrollbar-thumb:hover {
-  background: #888;
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.editorPane::-webkit-scrollbar-corner,
-.outputWrap::-webkit-scrollbar-corner,
-.chatMessages::-webkit-scrollbar-corner {
-  background: #282c34;
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
 }
 
-/* Responsive adjustments */
-@media (max-width: 992px) { /* Changed breakpoint to be more inclusive */
+::-webkit-scrollbar-corner {
+  background: rgba(26, 26, 26, 0.5);
+}
+
+/* ==== Responsive Design ==== */
+@media (max-width: 1200px) {
   .editorContainer {
-    flex-direction: column;
+    grid-template-columns: 1fr 280px;
   }
-
-  .editorMain {
-    height: auto;
+  
+  .fileTabsWrapper {
+    max-width: 55%;
   }
-
-  .chatPanel {
-    width: 100%;
-    height: 350px; /* Increased chat height on small screens */
-    border-left: none;
-    border-top: 1px solid #333;
+  
+  .actionButtons {
+    gap: 8px;
   }
-
-  .editorPane {
-    height: 50vh; /* Give more height to editor on smaller screens */
-  }
-
-  .outputWrap {
-    height: 180px; /* Maintain output height */
-  }
-
-  .headerRow {
-    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-    justify-content: center; /* Center items when wrapped */
-    gap: 8px; /* Smaller gap when wrapped */
-  }
-
-  .headerRow select,
-  .headerRow button {
-    font-size: 13px;
-    padding: 6px 10px;
+  
+  .runBtn,
+  .saveBtn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }
 
-@media (max-width: 768px) {
-    .headerRow {
-        padding: 10px;
-    }
+@media (max-width: 900px) {
+  .editorContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 250px;
+  }
+  
+  .chatPanel {
+    border-left: none;
+    border-top: 1px solid rgba(74, 238, 136, 0.2);
+    border-radius: 0;
+  }
+  
+  .headerRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .fileTabsWrapper {
+    max-width: 100%;
+    order: 2;
+    width: 100%;
+  }
+  
+  .actionButtons {
+    order: 1;
+  }
+}
+
+/* ==== Loading States and Animations ==== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fileTab {
+  animation: slideIn 0.3s ease-out;
+}
+
+.chatMessage {
+  animation: slideIn 0.2s ease-out;
+}
+
+/* ==== Focus and Accessibility ==== */
+.runBtn:focus,
+.saveBtn:focus,
+.chatSendBtn:focus,
+.addFileBtn:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(74, 238, 136, 0.3),
+    0 4px 16px rgba(74, 238, 136, 0.2);
+}
+
+.fileTab:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.5);
+}
+
+/* ==== High Contrast Mode Support ==== */
+@media (prefers-contrast: high) {
+  .fileTab.active {
+    background: #4aee88;
+    color: #000;
+    border: 2px solid #000;
+  }
+  
+  .runBtn,
+  .saveBtn,
+  .chatSendBtn,
+  .addFileBtn {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ==== Reduced Motion Support ==== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

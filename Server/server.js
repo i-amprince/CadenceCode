@@ -91,10 +91,33 @@ io.on('connection', (socket) => {
 
       await doc.save();
       socket.emit('SAVE_SUCCESS');
+      io.to(roomId).emit('CHECKPOINT_UPDATED', { fileName });
+      
     } catch (err) {
       console.error('❌ Save error:', err);
     }
   });
+
+  //added extra 
+  socket.on('DELETE_FILE', async ({ roomId, fileName, requester }) => {
+  try {
+    const room = await Code.findOne({ roomId });
+    if (!room) return;
+
+    if (room.creator !== requester) {
+      return socket.emit('ERROR', { message: 'Only the owner can delete files.' });
+    }
+
+    room.files = room.files.filter(f => f.name !== fileName);
+    await room.save();
+    io.to(roomId).emit('FILE_DELETED', { fileName });
+  } catch (err) {
+    console.error('DELETE_FILE error:', err);
+    socket.emit('ERROR', { message: 'Server error during deletion.' });
+  }
+});
+
+
 
   socket.on('RUN_CODE', async ({ code, languageId }) => {
     const submissionOptions = {

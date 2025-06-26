@@ -3,14 +3,13 @@ import CodeMirror from '@uiw/react-codemirror';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { autocompletion } from '@codemirror/autocomplete';
 import { javascript } from '@codemirror/lang-javascript';
-import { python } from '@codemirror/lang-python'; // Corrected import
-import { cpp } from '@codemirror/lang-cpp';     // Corrected import
-import { java } from '@codemirror/lang-java';   // Corrected import
+import { python } from '@codemirror/lang-python';
+import { cpp } from '@codemirror/lang-cpp';
+import { java } from '@codemirror/lang-java';
 import toast from 'react-hot-toast';
 import { socket } from '../socket';
 import './Editor.css';
-
-import { EditorView } from '@codemirror/view'; // Import EditorView for lineWrapping
+import { EditorView } from '@codemirror/view';
 
 const LANG = {
   js: { id: 93, extFn: () => javascript({ jsx: true }) },
@@ -25,13 +24,24 @@ export default function Editor({ roomId, onCodeChange }) {
   const [output, setOutput] = useState(['Waiting for execution...']);
   const [checkpoints, setCheckpoints] = useState([]);
   const [recent, setRecent] = useState([]);
-
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
   const chatRef = useRef(null);
-  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Guest' };
+  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Guest', email: '' };
 
   useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/room/${roomId}/info`);
+        const data = await res.json();
+        setOwnerEmail(data.creator);
+      } catch (err) {
+        toast.error('Failed to fetch room details');
+      }
+    };
+
+    fetchRoomDetails();
     socket.emit('GET_INITIAL_DATA', { roomId });
 
     socket.on('INITIAL_DATA', ({ files }) => {
@@ -41,24 +51,45 @@ export default function Editor({ roomId, onCodeChange }) {
     });
 
     socket.on('CODE_CHANGE', ({ fileName, code }) => {
-      setFiles(prev =>
-        prev.map(f =>
-          f.name === fileName ? { ...f, code } : f
-        )
-      );
+      setFiles(prev => prev.map(f => f.name === fileName ? { ...f, code } : f));
     });
 
     socket.on('CODE_OUTPUT', ({ output }) => setOutput(output));
-    socket.on('SAVE_SUCCESS', () => {
+    socket.on('SAVE_SUCCESS', async () => {
       toast.success('Saved');
-      fetchCheckpoint();
+      await fetchCheckpoint();
     });
+
     socket.on('CHAT_MESSAGE', msg => {
       setChatMessages(prev => [...prev, msg]);
     });
+
     socket.on('NEW_FILE_ADDED', ({ file }) => {
       setFiles(prev => [...prev, file]);
       toast.success(`New file added: ${file.name}`);
+    });
+
+    socket.on('FILE_DELETED', ({ fileName }) => {
+      setFiles(prevFiles => {
+        const newFiles = prevFiles.filter(f => f.name !== fileName);
+        toast.success(`File "${fileName}" deleted`);
+
+        if (currentFile === fileName) {
+          setCurrentFile(newFiles[0]?.name || null);
+        }
+
+        return newFiles;
+      });
+    });
+
+    socket.on('ERROR', ({ message }) => {
+      toast.error(message);
+    });
+
+    // 🚀 New: Listen for checkpoint update broadcast
+    socket.on('CHECKPOINT_UPDATED', async () => {
+      await fetchCheckpoint();
+      toast.success('Checkpoints updated');
     });
 
     fetchCheckpoint();
@@ -70,8 +101,23 @@ export default function Editor({ roomId, onCodeChange }) {
       socket.off('SAVE_SUCCESS');
       socket.off('CHAT_MESSAGE');
       socket.off('NEW_FILE_ADDED');
+      socket.off('FILE_DELETED');
+      socket.off('ERROR');
+      socket.off('CHECKPOINT_UPDATED'); // cleanup
     };
   }, [roomId]);
+
+  useEffect(() => {
+    if (currentFile && !files.find(f => f.name === currentFile)) {
+      setCurrentFile(files[0]?.name || null);
+    }
+  }, [files, currentFile]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   const fetchCheckpoint = async () => {
     try {
@@ -83,15 +129,9 @@ export default function Editor({ roomId, onCodeChange }) {
     }
   };
 
-  useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
-
   const run = () => {
     const f = files.find(f => f.name === currentFile);
-    const ext = currentFile.split('.').pop()?.toLowerCase();
+    const ext = currentFile?.split('.').pop()?.toLowerCase();
     const lang = LANG[ext === 'js' ? 'js' : ext] || LANG.js;
 
     setOutput(['Executing...']);
@@ -101,25 +141,25 @@ export default function Editor({ roomId, onCodeChange }) {
     });
   };
 
-  const save = () => {
+  const save = async () => {
     const f = files.find(f => f.name === currentFile);
     const code = f?.code || '';
     socket.emit('SAVE_CODE', { roomId, fileName: currentFile, code });
 
     const cp = { fileName: currentFile, code, savedAt: new Date().toISOString() };
-    setRecent(prev => [cp, ...prev].slice(0, 5));
+    
+    await fetchCheckpoint();
   };
 
   const addFile = () => {
-    const name = prompt('New file name (e.g. utils.js)');
-    if (!name || files.some(f => f.name === name)) {
-      return toast.error('Invalid or duplicate name');
+    const name = prompt('Enter new file name (e.g., utils.js):');
+    if (!name || !name.trim()) return;
+    if (files.some(f => f.name === name)) {
+      return toast.error('A file with that name already exists.');
     }
 
     const newFile = { name, code: '' };
-    setFiles(prev => [...prev, newFile]);
     setCurrentFile(name);
-
     socket.emit('NEW_FILE', { roomId, file: newFile });
   };
 
@@ -154,30 +194,82 @@ export default function Editor({ roomId, onCodeChange }) {
     return (LANG[ext] || LANG.js).extFn();
   };
 
+  const handleDeleteFile = (fileName) => {
+    if (files.length <= 1) {
+      toast.error('You cannot delete the last file.');
+      return;
+    }
+    if (window.confirm(`Are you sure you want to delete "${fileName}"? This action cannot be undone.`)) {
+      socket.emit('DELETE_FILE', {
+        roomId,
+        fileName,
+        requester: user.email || user.name,
+      });
+    }
+  };
+
   return (
     <div className="editorContainer">
       <div className="editorMain">
         <div className="headerRow">
-          <select className="fileSelect" value={currentFile || ''} onChange={e => setCurrentFile(e.target.value)}>
-            {files.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
-          </select>
-          <button className="newFileBtn" onClick={addFile}>➕ New File</button>
-          <button className="runBtn" onClick={run}>▶ Run</button>
-          <button className="saveBtn" onClick={save}>💾 Save</button>
-          <select className="checkpointSelect" onChange={e => {
-            const cp = mergedCP[e.target.value];
-            if (cp) {
-              onEdit(cp.code);
-              socket.emit('CODE_CHANGE', { roomId, fileName: currentFile, code: cp.code });
-            }
-          }}>
-            <option value="">🕒 Restore checkpoint</option>
-            {mergedCP.map((cp, i) => (
-              <option key={i} value={i}>
-                {new Date(cp.savedAt).toLocaleTimeString()}
-              </option>
-            ))}
-          </select>
+          {/* --- File Tabs Section --- */}
+          <div className="fileTabsWrapper">
+            <div className="fileTabs">
+              {files.map(f => (
+                <div
+                  key={f.name}
+                  className={`fileTab ${currentFile === f.name ? 'active' : ''}`}
+                  onClick={() => setCurrentFile(f.name)}
+                  title={f.name}
+                >
+                  <span className="fileName">{f.name}</span>
+                  {user.email === ownerEmail && (
+                    <button
+                      className="fileDeleteBtn"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent tab selection when deleting
+                        handleDeleteFile(f.name);
+                      }}
+                      title="Delete file"
+                      disabled={files.length <= 1}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button className="addFileBtn" onClick={addFile} title="Add New File">
+              +
+            </button>
+          </div>
+
+          {/* --- Action Buttons Section --- */}
+          <div className="actionButtons">
+            <button className="runBtn" onClick={run}>▶ Run</button>
+            <button className="saveBtn" onClick={save}>💾 Save</button>
+            <select
+              className="checkpointSelect"
+              value=""
+              onChange={e => {
+                const selectedIndex = e.target.value;
+                if (selectedIndex === "") return;
+                const cp = mergedCP[selectedIndex];
+                if (cp) {
+                  onEdit(cp.code);
+                  socket.emit('CODE_CHANGE', { roomId, fileName: currentFile, code: cp.code });
+                }
+                e.target.value = ""; // Reset select
+              }}
+            >
+              <option value="" disabled>🕒 Restore</option>
+              {mergedCP.map((cp, i) => (
+                <option key={i} value={i}>
+                  {new Date(cp.savedAt).toLocaleTimeString()}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="editorPane">
@@ -188,7 +280,7 @@ export default function Editor({ roomId, onCodeChange }) {
             extensions={[
               getExtension(),
               autocompletion(),
-              EditorView.lineWrapping // This is still correct for word wrapping
+              EditorView.lineWrapping
             ]}
             onChange={onEdit}
           />

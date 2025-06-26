@@ -1,140 +1,694 @@
-/* src/pages/EditorPage.css */
+/* ==== Professional EditorPage Styling ==== */
 
 /* Main layout using CSS Grid for perfect column control */
 .mainWrap {
-    display: grid;
-    /* Creates two columns: a fixed 230px sidebar and an editor that takes the rest of the space */
-    grid-template-columns: 230px 1fr;
-    height: 100vh; /* Ensures the layout fills the entire screen height */
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-/* --- Sidebar Styling --- */
+/* Subtle background pattern for texture */
+.mainWrap::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(74, 238, 136, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(74, 238, 136, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==== Enhanced Sidebar Styling ==== */
 .aside {
-    background: #1c1c1c;
-    padding: 16px; /* 16px padding on left/right means 230 - 32 = 198px content area */
-    color: #fff;
-    display: flex; /* Key for positioning the buttons at the bottom */
-    flex-direction: column;
+  background: linear-gradient(135deg, #1c1c1c 0%, #181818 100%);
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  border-right: 1px solid rgba(74, 238, 136, 0.2);
+  box-shadow: 
+    2px 0 20px rgba(0, 0, 0, 0.3),
+    inset -1px 0 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.aside::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.5) 50%, 
+    transparent 100%);
 }
 
 .asideInner {
-    flex: 1; /* This is the magic! It makes this div grow and push the buttons down */
+  flex: 1;
+  position: relative;
 }
 
-/* App Header - holds the logo and name */
+/* ==== Enhanced App Header ==== */
 .app-header {
-    display: flex; /* Make it a flex container */
-    align-items: center; /* Vertically align items in the center */
-    gap: 8px; /* Slightly reduced space between logo and app name to save horizontal space */
-    border-bottom: 1px solid #444; /* Moved border from original .logo */
-    padding-bottom: 1rem; /* Moved padding from original .logo */
-    margin-bottom: 1.5rem; /* Space below the header */
-    /* Ensure content fits by allowing it to shrink */
-    min-width: 0; /* Allows content inside flex item to shrink below its intrinsic size */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(74, 238, 136, 0.3);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  min-width: 0;
+  position: relative;
 }
 
-/* Adjusted: Styling for the logo image */
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(74, 238, 136, 0.6) 50%, 
+    transparent 100%);
+}
+
+/* Enhanced Logo Styling */
 .logo-image {
-    height: 45px; /* Reduced height slightly more to save space */
-    /* No display: block; margin: auto; here as it's part of a flex container */
-    flex-shrink: 0; /* Prevent the image from shrinking */
+  height: 48px;
+  width: 48px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  box-shadow: 
+    0 4px 12px rgba(74, 238, 136, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Adjusted: Styling for the app name text */
+.logo-image:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 
+    0 6px 20px rgba(74, 238, 136, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced App Name */
 .app-name {
-    font-size: 1.25rem; /* Further reduced font size to ensure fit */
-    font-weight: bold;
-    color: #4aee88; /* Your accent green color */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
-    letter-spacing: 0.5px;
-    margin: 0; /* Remove default h1 margin */
-    /* Ensure text fits on one line and truncates if it overflows */
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide overflow content */
-    text-overflow: ellipsis; /* Display "..." for overflowed text */
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #4aee88;
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(74, 238, 136, 0.3);
+  letter-spacing: 0.5px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 50%, #4aee88 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
 
+/* Enhanced Section Headers */
 .asideInner h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  padding-left: 12px;
 }
 
-/* Styling the list of connected clients */
+.asideInner h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  border-radius: 2px;
+}
+
+/* Enhanced Clients List */
 .clientsList {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap; /* Allows clients to wrap to the next line */
-    gap: 20px; /* Provides spacing between each client avatar */
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  min-height: 60px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* --- General Button Styling --- */
+.clientsList::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(74, 238, 136, 0.03), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.clientsList:hover::before {
+  left: 100%;
+}
+
+.clientsList:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(224, 224, 224, 0.5);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.clientsList:empty::after {
+  content: 'No users connected';
+}
+
+/* ==== Enhanced Button Styling ==== */
 .btn {
-    width: 100%;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
+  width: 100%;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .copyBtn {
-    background: #fff;
-    color: #1c1c1c;
-    margin-top: 20px; /* Space above the first button */
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  color: #1c1c1c;
+  margin-top: 24px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .copyBtn:hover {
-    background: #f0f0f0;
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.copyBtn:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .leaveBtn {
-    background: #4aee88;
-    color: #1c1c1c;
-    margin-top: 10px;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
+  margin-top: 12px;
+  box-shadow: 
+    0 4px 12px rgba(74, 238, 136, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .leaveBtn:hover {
-    background: #3ac672;
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(74, 238, 136, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* --- Editor Pane Styling --- */
+.leaveBtn:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(74, 238, 136, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ==== Enhanced Editor Wrap ==== */
 .editorWrap {
-    /* The editor component itself will fill this container */
-    height: 100vh;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px 0 0 0;
+  overflow: hidden;
+  box-shadow: 
+    -2px 0 20px rgba(0, 0, 0, 0.3),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
-
+/* ==== Enhanced Status Indicators ==== */
 .connectionStatus {
-    padding: 10px;
-    background-color: #2a2a2a;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    text-align: center;
-    color: #ffd700;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+  color: #1a1a1a;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: 
+    0 4px 12px rgba(255, 193, 7, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  animation: pulse 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.connectionStatus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.connectionStatus:hover::before {
+  left: 100%;
 }
 
 .connectionError {
-    padding: 10px;
-    background-color: #ff5555;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    text-align: center;
-    color: white;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: 
+    0 4px 12px rgba(220, 53, 69, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.connectionError::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.connectionError:hover::before {
+  left: 100%;
 }
 
 .retryBtn {
-    margin-top: 8px;
-    background-color: #4aee88;
-    color: #1c1c1c;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  margin-top: 12px;
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  color: #1a1a1a;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.retryBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: left 0.5s ease;
+}
+
+.retryBtn:hover::before {
+  left: 100%;
 }
 
 .retryBtn:hover {
-    background-color: #3dd16f;
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 238, 136, 0.3);
+}
+
+/* ==== Enhanced Scrollbar Styling ==== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 26, 26, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(26, 26, 26, 0.5);
+}
+
+/* ==== Loading Animation ==== */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==== Responsive Design ==== */
+@media (max-width: 1200px) {
+  .mainWrap {
+    grid-template-columns: 240px 1fr;
+  }
+  
+  .aside {
+    padding: 16px;
+  }
+  
+  .app-name {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .mainWrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  .aside {
+    flex-direction: row;
+    height: auto;
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+  }
+  
+  .aside::before {
+    display: none;
+  }
+  
+  .aside::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(74, 238, 136, 0.5) 50%, 
+      transparent 100%);
+  }
+  
+  .asideInner {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .app-header {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    gap: 8px;
+  }
+  
+  .app-header::after {
+    display: none;
+  }
+  
+  .logo-image {
+    height: 36px;
+    width: 36px;
+  }
+  
+  .app-name {
+    font-size: 1rem;
+  }
+  
+  .asideInner h3 {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+  
+  .clientsList {
+    margin: 0;
+    padding: 8px;
+    gap: 8px;
+    min-height: auto;
+  }
+  
+  .btn {
+    margin: 0 !important;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+  
+  .editorWrap {
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .aside {
+    flex-wrap: wrap;
+    padding: 8px 12px;
+  }
+  
+  .asideInner {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  
+  .app-header {
+    justify-content: center;
+  }
+  
+  .asideInner h3,
+  .clientsList {
+    display: none;
+  }
+  
+  .btn {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* ==== Focus and Accessibility ==== */
+.btn:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(74, 238, 136, 0.3),
+    0 4px 16px rgba(74, 238, 136, 0.2);
+}
+
+.logo-image:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(74, 238, 136, 0.3),
+    0 6px 20px rgba(74, 238, 136, 0.3);
+}
+
+/* ==== High Contrast Mode Support ==== */
+@media (prefers-contrast: high) {
+  .copyBtn {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+  
+  .leaveBtn {
+    background: #4aee88;
+    color: #000;
+    border: 2px solid #000;
+  }
+  
+  .app-name {
+    color: #4aee88;
+    text-shadow: none;
+    -webkit-text-fill-color: #4aee88;
+  }
+  
+  .retryBtn {
+    background: #4aee88;
+    color: #000;
+    border: 2px solid #000;
+  }
+}
+
+/* ==== Reduced Motion Support ==== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .app-name {
+    animation: none;
+  }
+}
+
+/* ==== Dark Mode Enhancements ==== */
+@media (prefers-color-scheme: dark) {
+  .mainWrap {
+    background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
+  }
+  
+  .aside {
+    background: linear-gradient(135deg, #171717 0%, #131313 100%);
+  }
+  
+  .editorWrap {
+    background: rgba(20, 20, 20, 0.95);
+  }
+}
+
+/* ==== Additional Visual Enhancements ==== */
+.asideInner {
+  animation: slideIn 0.5s ease-out;
+}
+
+.clientsList > * {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Add subtle glow effect to interactive elements */
+.btn:hover,
+.logo-image:hover {
+  filter: drop-shadow(0 0 8px rgba(74, 238, 136, 0.2));
+}
+
+/* Enhanced loading states */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn:disabled::before {
+  display: none;
+}
+
+/* Improved visual hierarchy */
+.asideInner > * + * {
+  margin-top: 8px;
+}
+
+/* Enhanced focus indicators for better accessibility */
+.aside *:focus-visible {
+  outline: 2px solid #4aee88;
+  outline-offset: 2px;
+  border-radius: 4px;
 }

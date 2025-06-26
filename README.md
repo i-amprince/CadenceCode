@@ -16,9 +16,10 @@ CadenceCode comes packed with features designed to enhance your collaborative co
 * **Dynamic Room System:** Easily create or join private coding rooms with unique IDs and optional password protection.
 * **Real-Time Collaboration:** Experience instant code synchronization, allowing all users in a room to see changes as they happen.
 * **Multi-File Support:** Organize your projects efficiently by adding, editing, and switching between multiple files within a single room.
+* **Remove File (Owner Only):** The room owner can remove any file from the project. Other users cannot delete files.
 * **Multi-Language Compatibility:** Write and run code in popular languages including **JavaScript, Python, C++,** and **Java**.
 * **Cloud Code Execution:** Execute your code in the cloud via the **Judge0 API** and view the output instantly.
-* **Checkpoints:** Never lose your work! Save and restore code checkpoints for individual files.
+* **Checkpoints:** Never lose your work! Save and restore code checkpoints for individual files. Checkpoints are visible and restorable from the editor.
 * **Integrated In-Room Chat:** Communicate effortlessly with your collaborators through the built-in chat panel.
 * **User Management:** Room owners have the ability to kick disruptive users, maintaining a productive environment.
 * **Responsive & Modern UI:** Enjoy a sleek, dark-themed, and mobile-friendly interface for a comfortable coding experience on any device.
@@ -71,14 +72,27 @@ CadenceCode is built using a modern and robust tech stack:
 ### 1. Login Page
 
 ![Login Page](src/Images/1.png)
+*Google OAuth login for secure authentication.*
 
 ### 2. Room Entry
 
 ![Room Entry](src/Images/2.png)
+*Enter Room ID, Username, and Room Password to join or create a room.*
 
-### 3. Main Editor After Login
+### 3. Main Editor (Normal User Mode)
 
 ![Main Editor](src/Images/3.png)
+*Collaborative code editor with chat, file tabs, and output console.*
+
+### 4. Main Editor (Owner Mode)
+
+![Owner Mode](src/Images/4.png)
+*Owner can see delete (×) buttons on file tabs to remove files.*
+
+### 5. Checkpoints
+
+![Checkpoints](src/Images/5.png)
+*Restore previous code checkpoints for each file directly from the editor.*
 
 ---
 
@@ -98,7 +112,7 @@ Follow these steps to get CadenceCode up and running on your local machine.
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/i-amprince/CadenceCode.git](https://github.com/i-amprince/CadenceCode.git)
+    git clone https://github.com/i-amprince/CadenceCode.git
     ```
 
 2.  **Navigate to the project directory:**
