@@ -1,6 +1,6 @@
 // src/components/Editor.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react'; // Added useRef
 import CodeMirror from '@uiw/react-codemirror';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { autocompletion } from '@codemirror/autocomplete';
@@ -10,7 +10,7 @@ import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java';
 import { socket } from '../socket';
 import toast from 'react-hot-toast';
-import './Editor.css';
+import './Editor.css'; // Ensure this path is correct
 
 const LANGUAGES = {
   javascript: { id: 93, label: 'JavaScript (Node.js)', ext: 'js' },
@@ -35,6 +35,20 @@ const Editor = ({ roomId, onCodeChange }) => {
   const [language, setLanguage] = useState('javascript');
   const [checkpoints, setCheckpoints] = useState([]);
   const [recentCheckpoints, setRecentCheckpoints] = useState([]);
+
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const chatMessagesRef = useRef(null); // Ref for scrolling chat to bottom
+
+  // Assuming 'user' is stored in localStorage after login
+  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Guest' }; // Default to Guest
+
+  // Scroll chat messages to bottom on new message
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   useEffect(() => {
     const handleCodeChange = ({ code: newCode }) => {
@@ -123,11 +137,33 @@ const Editor = ({ roomId, onCodeChange }) => {
       return;
     }
     setCode(codeToRestore);
+    onCodeChange(codeToRestore);
     socket.emit('CODE_CHANGE', { roomId, code: codeToRestore });
     toast.success('Code restored from checkpoint');
   };
 
   const mergedCheckpoints = [...recentCheckpoints, ...checkpoints].slice(0, 5);
+
+  // ----- Chat Logic -----
+  useEffect(() => {
+    socket.on('CHAT_MESSAGE', (msg) => {
+      setChatMessages((prev) => [...prev, msg]);
+    });
+    return () => socket.off('CHAT_MESSAGE');
+  }, []);
+
+  const sendChatMessage = () => {
+    const trimmed = chatInput.trim();
+    if (!trimmed) return;
+
+    socket.emit('CHAT_MESSAGE', {
+      roomId,
+      username: user.name, // Use the user's name
+      message: trimmed,
+    });
+
+    setChatInput('');
+  };
 
   return (
     <div className="editorContainer">
@@ -160,11 +196,11 @@ const Editor = ({ roomId, onCodeChange }) => {
         <div className="editorPane">
           <CodeMirror
             value={code}
-            height="calc(100vh - 300px)"
+            height="calc(100vh - 300px)" // Adjusted height to accommodate header, run bar, and output
             theme={dracula}
             extensions={[
               getLanguageExtension(language),
-              autocompletion({ activateOnTyping: true })
+              autocompletion({ activateOnTyping: true }),
             ]}
             onChange={sendCodeChange}
             style={{ fontSize: 16 }}
@@ -182,9 +218,33 @@ const Editor = ({ roomId, onCodeChange }) => {
             {output.length > 0 ? (
               output.map((line, i) => <div key={i}>{`> ${line}`}</div>)
             ) : (
-              <div> Output will appear here.</div>
+              <div>> Output will appear here.</div>
             )}
           </pre>
+        </div>
+      </div>
+
+      <div className="chatPanel">
+        <div className="chatHeader">💬 Room Chat</div>
+
+        <div className="chatMessages" ref={chatMessagesRef}>
+          {chatMessages.map((msg, i) => (
+            <div key={i} className="chatMessage">
+              <strong>{msg.username}:</strong> <span>{msg.message}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="chatInputWrap">
+          <input
+            type="text"
+            placeholder="Type your message..."
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
+            className="chatInput"
+          />
+          <button onClick={sendChatMessage} className="chatSendBtn">Send</button>
         </div>
       </div>
     </div>

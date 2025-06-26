@@ -74,6 +74,15 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('CHAT_MESSAGE', ({ roomId, username, message }) => {
+  io.in(roomId).emit('CHAT_MESSAGE', {
+    username,
+    message,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+
   socket.on('CODE_CHANGE', ({ roomId, code }) => {
     socket.to(roomId).emit('CODE_CHANGE', { code });
   });
