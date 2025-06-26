@@ -137,7 +137,7 @@ export default function Home() {
             <footer className={styles.footer}>
                 <h4>
                     Built with ❤️ by{' '}
-                    <a href="https://github.com/your-github-username" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
+                    <a href="https://github.com/i-amprince" target="_blank" rel="noopener noreferrer" className={styles.footerLink}>
                         Prince
                     </a>
                 </h4>

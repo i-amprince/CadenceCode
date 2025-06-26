@@ -20,6 +20,7 @@ app.use(cors({
 app.use('/api/auth', authRoutes);
 app.use('/api/room', roomRoutes);
 
+
 mongoose.connect('mongodb://localhost:27017/collab-editor', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -78,18 +79,35 @@ io.on('connection', (socket) => {
   });
 
   socket.on('SAVE_CODE', async ({ roomId, code }) => {
-    try {
-      await Code.findOneAndUpdate(
-        { roomId },
-        { code },
-        { upsert: true, new: true }
-      );
-      socket.emit('SAVE_SUCCESS');
-      console.log(`💾 Code saved manually for room: ${roomId}`);
-    } catch (err) {
-      console.error('Error saving code:', err);
+  try {
+    const room = await Code.findOne({ roomId });
+
+    if (!room) {
+      console.warn(`Room ${roomId} not found while saving code.`);
+      return;
     }
-  });
+
+    // Update the main code field
+    room.code = code;
+
+    // Add new checkpoint to the top of the array
+    room.checkpoints.unshift({
+      code,
+      savedAt: new Date(),
+    });
+
+    // Trim the list to the latest 5 only
+    room.checkpoints = room.checkpoints.slice(0, 5);
+
+    await room.save();
+
+    socket.emit('SAVE_SUCCESS');
+    console.log(`💾 Code and checkpoint saved for room: ${roomId}`);
+  } catch (err) {
+    console.error('❌ Error saving checkpoint:', err);
+  }
+});
+
 
     //adeed now 
   socket.on('KICK_USER', ({ socketId }) => {
