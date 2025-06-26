@@ -3,12 +3,14 @@ import CodeMirror from '@uiw/react-codemirror';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import { autocompletion } from '@codemirror/autocomplete';
 import { javascript } from '@codemirror/lang-javascript';
-import { python } from '@codemirror/lang-python';
-import { cpp } from '@codemirror/lang-cpp';
-import { java } from '@codemirror/lang-java';
+import { python } from '@codemirror/lang-python'; // Corrected import
+import { cpp } from '@codemirror/lang-cpp';     // Corrected import
+import { java } from '@codemirror/lang-java';   // Corrected import
 import toast from 'react-hot-toast';
 import { socket } from '../socket';
 import './Editor.css';
+
+import { EditorView } from '@codemirror/view'; // Import EditorView for lineWrapping
 
 const LANG = {
   js: { id: 93, extFn: () => javascript({ jsx: true }) },
@@ -156,13 +158,13 @@ export default function Editor({ roomId, onCodeChange }) {
     <div className="editorContainer">
       <div className="editorMain">
         <div className="headerRow">
-          <select value={currentFile || ''} onChange={e => setCurrentFile(e.target.value)}>
+          <select className="fileSelect" value={currentFile || ''} onChange={e => setCurrentFile(e.target.value)}>
             {files.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
           </select>
-          <button onClick={addFile}>➕ New File</button>
-          <button onClick={run}>▶ Run</button>
-          <button onClick={save}>💾 Save</button>
-          <select onChange={e => {
+          <button className="newFileBtn" onClick={addFile}>➕ New File</button>
+          <button className="runBtn" onClick={run}>▶ Run</button>
+          <button className="saveBtn" onClick={save}>💾 Save</button>
+          <select className="checkpointSelect" onChange={e => {
             const cp = mergedCP[e.target.value];
             if (cp) {
               onEdit(cp.code);
@@ -181,9 +183,13 @@ export default function Editor({ roomId, onCodeChange }) {
         <div className="editorPane">
           <CodeMirror
             value={files.find(f => f.name === currentFile)?.code || ''}
-            height="calc(100vh - 350px)"
+            height="100%"
             theme={dracula}
-            extensions={[getExtension(), autocompletion()]}
+            extensions={[
+              getExtension(),
+              autocompletion(),
+              EditorView.lineWrapping // This is still correct for word wrapping
+            ]}
             onChange={onEdit}
           />
         </div>
@@ -191,7 +197,7 @@ export default function Editor({ roomId, onCodeChange }) {
         <div className="outputWrap">
           <pre className="outputConsole">
             {output.length > 0 ? output.map((l, i) => (<div key={i}>{`> ${l}`}</div>))
-              : <div>> No output yet.</div>
+              : <div> No output yet.</div>
             }
           </pre>
         </div>

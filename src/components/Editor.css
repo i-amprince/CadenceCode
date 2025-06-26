@@ -1,113 +1,194 @@
+/* General Layout */
 .editorContainer {
   display: flex;
   height: 100vh;
-  background-color: #1a1a1a;
+  background-color: #1a1a1a; /* Deeper background */
   color: #e0e0e0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow: hidden;
 }
 
 .editorMain {
-  flex: 1;
+  flex: 1; /* Allows editor to take up available space */
   display: flex;
   flex-direction: column;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow on the main editor area */
 }
 
+/* Header Row (Top Bar) */
 .headerRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: #282c34;
+  gap: 12px; /* Increased gap for better spacing */
+  padding: 12px 20px; /* More horizontal padding */
+  background: #20232a; /* Slightly lighter header background than main editor */
   border-bottom: 1px solid #333;
+  flex-shrink: 0;
 }
 
 .headerRow select,
 .headerRow button {
-  padding: 7px 12px;
-  border-radius: 5px;
-  border: none;
+  padding: 8px 15px; /* Consistent padding */
+  border-radius: 6px; /* Slightly more rounded corners */
+  border: 1px solid #444; /* Consistent border for controls */
   font-size: 14px;
   cursor: pointer;
+  transition: all 0.2s ease; /* Smooth transitions for hover effects */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for buttons/selects */
 }
 
 .headerRow select {
-  background: #3b3e46;
+  background: #34373e;
   color: #e0e0e0;
-  border: 1px solid #555;
+  appearance: none; /* Remove default select arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 30px; /* Make space for the custom arrow */
+}
+
+.headerRow select:hover {
+  border-color: #007acc;
 }
 
 .headerRow button {
-  background: #007acc;
+  background: #007acc; /* Primary blue for actions */
   color: #fff;
+  font-weight: 600; /* Slightly bolder text */
 }
 
 .headerRow button:hover {
   background: #005fa3;
-  transform: translateY(-1px);
+  transform: translateY(-2px); /* More noticeable lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3); /* Blue shadow on hover */
 }
 
+/* Specific Button Styles */
+.newFileBtn {
+    background-color: #28a745 !important; /* Green for new file */
+}
+.newFileBtn:hover {
+    background-color: #218838 !important;
+    box-shadow: 0 44px 8px rgba(40, 167, 69, 0.3) !important;
+}
+
+.runBtn {
+    background-color: #e5a400 !important; /* Orange for run */
+}
+.runBtn:hover {
+    background-color: #cc9400 !important;
+    box-shadow: 0 4px 8px rgba(229, 164, 0, 0.3) !important;
+}
+
+.saveBtn {
+    background-color: #007acc !important; /* Blue for save */
+}
+.saveBtn:hover {
+    background-color: #005fa3 !important;
+    box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3) !important;
+}
+
+/* Editor Pane */
 .editorPane {
   flex: 1;
-  overflow: auto;
+  overflow: auto; /* Enable scrollbars */
   border: 1px solid #333;
-  background: #1e1e1e;
+  border-top: none; /* Remove top border as header has one */
+  background: #1e1e1e; /* Match CodeMirror background */
+  display: flex; /* Crucial: Make this a flex container */
+  flex-direction: column; /* Crucial: Stack children vertically */
 }
 
+/* CodeMirror Specific Overrides */
 .cm-editor {
-  height: 100% !important;
+  flex: 1; /* Crucial: Make CodeMirror component fill remaining vertical space */
+  height: 100% !important; /* Ensure CodeMirror takes full height of its parent */
+  width: 100% !important; /* Ensure CodeMirror takes full width of its parent */
   font-family: 'Cascadia Code', monospace !important;
-  font-size: 15px;
-  padding: 10px;
+  font-size: 16px; /* Slightly larger font for readability */
+  padding: 15px; /* More padding inside the editor */
+  box-sizing: border-box; /* Include padding in height calculations */
+  background-color: #1e1e1e !important; /* Ensure background consistency */
+  outline: none !important; /* Remove default browser focus outline */
+  /* Remove any min-width if it was here, as it could prevent stretching */
 }
 
+/* These classes are internal to CodeMirror. We may need to target them if the above isn't enough */
+/* This is often where the 'blank' space issue lies. */
+.cm-scroller {
+    flex: 1; /* Make the scroller fill available space */
+    width: 100% !important; /* Ensure scroller takes full width */
+    height: 100% !important; /* Ensure scroller takes full height */
+    overflow: auto !important; /* Allow internal scrolling if content overflows */
+    box-sizing: border-box; /* Include padding in dimensions */
+}
+
+.cm-content {
+    min-height: 100%; /* Ensure content area is at least full height */
+    width: 100%; /* Ensure content area is full width */
+    box-sizing: border-box;
+}
+
+/* Output Section */
 .outputWrap {
-  padding: 15px;
-  background: #0f0f0f;
+  padding: 15px 20px; /* Consistent padding */
+  background: #0f0f0f; /* Even darker for output console */
   height: 180px;
   overflow-y: auto;
   border-top: 1px solid #333;
+  flex-shrink: 0;
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
 }
 
 .outputConsole {
   font-family: 'Cascadia Code', monospace;
-  font-size: 13px;
-  color: #00ff00;
+  font-size: 14px; /* Slightly larger output font */
+  color: #00ff00; /* Bright green for success */
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .outputConsole > div:first-child:not([class]) {
   color: #888;
 }
 
+/* Chat Panel */
 .chatPanel {
-  width: 300px;
+  width: 320px; /* Slightly wider chat panel */
+  min-width: 280px; /* Ensure it doesn't get too small */
   background: #282c34;
   border-left: 1px solid #333;
   display: flex;
   flex-direction: column;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2); /* Shadow for chat panel */
 }
 
 .chatHeader {
-  padding: 12px;
-  background: #1e1e1e;
+  padding: 15px; /* More padding */
+  background: #20232a; /* Match header background */
   border-bottom: 1px solid #333;
   font-weight: bold;
   text-align: center;
+  color: #c9d1d9; /* Lighter header text */
+  font-size: 1.1em; /* Slightly larger font */
 }
 
 .chatMessages {
   flex: 1;
-  padding: 10px;
+  padding: 15px; /* More padding */
   overflow-y: auto;
+  word-wrap: break-word;
 }
 
 .chatMessage {
-  margin-bottom: 8px;
+  margin-bottom: 10px; /* More spacing between messages */
+  line-height: 1.5; /* Better readability */
 }
 
 .chatMessage strong {
   color: #9cdcfe;
+  font-weight: 600;
+  margin-right: 8px; /* More space after username */
 }
 
 .chatMessage span {
@@ -116,35 +197,127 @@
 
 .chatInputWrap {
   display: flex;
-  padding: 10px;
-  background: #1e1e1e;
+  padding: 15px; /* More padding */
+  background: #20232a; /* Match header background */
   border-top: 1px solid #333;
+  flex-shrink: 0;
 }
 
 .chatInput {
   flex: 1;
-  padding: 8px;
+  padding: 10px 12px; /* Increased padding */
   background: #3b3e46;
   border: 1px solid #555;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #e0e0e0;
   margin-right: 10px;
+  font-size: 14px;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); /* Inner shadow for input */
 }
 
 .chatInput::placeholder {
-  color: #aaa;
+  color: #999; /* Darker placeholder */
+}
+
+.chatInput:focus {
+    border-color: #007acc; /* Highlight border on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(0, 122, 204, 0.25); /* Subtle glowing effect */
 }
 
 .chatSendBtn {
   background: #007acc;
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 10px 18px; /* Larger send button */
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .chatSendBtn:hover {
   background: #005fa3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 122, 204, 0.3);
+}
+
+
+/* --- Custom Scrollbar Styles (Applied to all scrollable areas) --- */
+.editorPane::-webkit-scrollbar,
+.outputWrap::-webkit-scrollbar,
+.chatMessages::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.editorPane::-webkit-scrollbar-track,
+.outputWrap::-webkit-scrollbar-track,
+.chatMessages::-webkit-scrollbar-track {
+  background: #282c34;
+  border-radius: 5px;
+}
+
+.editorPane::-webkit-scrollbar-thumb,
+.outputWrap::-webkit-scrollbar-thumb,
+.chatMessages::-webkit-scrollbar-thumb {
+  background: #6a6a6a; /* Slightly lighter grey for better visibility */
+  border-radius: 5px;
+}
+
+.editorPane::-webkit-scrollbar-thumb:hover,
+.outputWrap::-webkit-scrollbar-thumb:hover,
+.chatMessages::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+.editorPane::-webkit-scrollbar-corner,
+.outputWrap::-webkit-scrollbar-corner,
+.chatMessages::-webkit-scrollbar-corner {
+  background: #282c34;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) { /* Changed breakpoint to be more inclusive */
+  .editorContainer {
+    flex-direction: column;
+  }
+
+  .editorMain {
+    height: auto;
+  }
+
+  .chatPanel {
+    width: 100%;
+    height: 350px; /* Increased chat height on small screens */
+    border-left: none;
+    border-top: 1px solid #333;
+  }
+
+  .editorPane {
+    height: 50vh; /* Give more height to editor on smaller screens */
+  }
+
+  .outputWrap {
+    height: 180px; /* Maintain output height */
+  }
+
+  .headerRow {
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    justify-content: center; /* Center items when wrapped */
+    gap: 8px; /* Smaller gap when wrapped */
+  }
+
+  .headerRow select,
+  .headerRow button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+    .headerRow {
+        padding: 10px;
+    }
 }
