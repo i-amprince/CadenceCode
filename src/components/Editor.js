@@ -182,7 +182,7 @@ const Editor = ({ roomId, onCodeChange }) => {
             {output.length > 0 ? (
               output.map((line, i) => <div key={i}>{`> ${line}`}</div>)
             ) : (
-              <div>> Output will appear here.</div>
+              <div> Output will appear here.</div>
             )}
           </pre>
         </div>
