@@ -4,7 +4,7 @@
 
 ## 🚀 Overview
 
-CadenceCode is a powerful, real-time collaborative code editor that allows developers to write, execute, and discuss code together in a shared environment. Whether you're pair programming, conducting technical interviews, or simply brainstorming with friends, CadenceCode provides a seamless and interactive experience with multi-language support, live chat, and robust collaboration features.
+CadenceCode is a powerful, real-time collaborative code editor that allows developers to write, execute, and verbally discuss code together in a shared environment. Whether you're pair programming, conducting technical interviews, or brainstorming with a team, CadenceCode provides a seamless and interactive experience with voice chat, multi-language support, and robust collaboration features.
 
 ---
 
@@ -13,15 +13,17 @@ CadenceCode is a powerful, real-time collaborative code editor that allows devel
 CadenceCode comes packed with features designed to enhance your collaborative coding experience:
 
 * **Google Login:** Secure and convenient authentication using Google OAuth 2.0.
+* **Real User Avatars:** See your collaborators' actual Google profile pictures for a more personal connection.
 * **Dynamic Room System:** Easily create or join private coding rooms with unique IDs and optional password protection.
 * **Real-Time Collaboration:** Experience instant code synchronization, allowing all users in a room to see changes as they happen.
+* **Integrated Voice Chat (WebRTC):** Communicate seamlessly with your team using built-in, real-time voice calls. Includes mute/unmute controls for each participant and speaking indicators.
+* **Enhanced User Management:** The room owner can kick disruptive users. The owner is clearly identified in the user list.
 * **Multi-File Support:** Organize your projects efficiently by adding, editing, and switching between multiple files within a single room.
-* **Remove File (Owner Only):** The room owner can remove any file from the project. Other users cannot delete files.
+* **Remove File (Owner Only):** The room owner has the exclusive right to remove any file from the project.
 * **Multi-Language Compatibility:** Write and run code in popular languages including **JavaScript, Python, C++,** and **Java**.
 * **Cloud Code Execution:** Execute your code in the cloud via the **Judge0 API** and view the output instantly.
-* **Checkpoints:** Never lose your work! Save and restore code checkpoints for individual files. Checkpoints are visible and restorable from the editor.
-* **Integrated In-Room Chat:** Communicate effortlessly with your collaborators through the built-in chat panel.
-* **User Management:** Room owners have the ability to kick disruptive users, maintaining a productive environment.
+* **Checkpoints:** Never lose your work! Save and restore code checkpoints for individual files directly from the editor.
+* **Integrated In-Room Chat:** Communicate effortlessly with your collaborators through the built-in text chat panel.
 * **Responsive & Modern UI:** Enjoy a sleek, dark-themed, and mobile-friendly interface for a comfortable coding experience on any device.
 
 ---
@@ -35,7 +37,7 @@ CadenceCode is built using a modern and robust tech stack:
 * **React:** A powerful JavaScript library for building interactive user interfaces.
 * **React Router:** For declarative routing within the application.
 * **React Hot Toast:** Elegant and responsive notifications.
-* **CodeMirror:** A versatile in-browser code editor with autoCompletion.
+* **CodeMirror:** A versatile in-browser code editor with auto-completion.
 * **@react-oauth/google:** Seamless Google OAuth integration for React applications.
 * **Avatar:** For displaying user avatars.
 * **CSS Modules:** For scoped and modular styling.
@@ -49,11 +51,11 @@ CadenceCode is built using a modern and robust tech stack:
 * **JWT (JSON Web Tokens):** For secure authentication and authorization.
 * **Google Auth Library:** For interacting with Google APIs.
 * **Judge0 API:** A robust and scalable online judge system for code execution.
-* **Socket.IO:** For real-time, bidirectional communication.
 
 ### Real-Time Communication
 
 * **WebSockets (Socket.IO):** Enables live code synchronization and in-room chat.
+* **WebRTC:** Powers real-time peer-to-peer voice communication.
 
 ### Authentication
 
@@ -69,35 +71,35 @@ CadenceCode is built using a modern and robust tech stack:
 
 ## 📸 Screenshots
 
-### 1. Login Page
+1. **Login Page**
 
-![Login Page](src/Images/1.png)
-*Google OAuth login for secure authentication.*
+   ![Login Page](src/Images/1.png)
+   *Google OAuth login for secure authentication.*
 
-### 2. Room Entry
+2. **Room Entry**
 
-![Room Entry](src/Images/2.png)
-*Enter Room ID, Username, and Room Password to join or create a room.*
+   ![Room Entry](src/Images/2.png)
+   *Enter Room ID, Username, and Room Password to join or create a room.*
 
-### 3. Main Editor (Normal User Mode)
+3. **Main Editor (Owner's View)**
 
-![Main Editor](src/Images/3.png)
-*Collaborative code editor with chat, file tabs, and output console.*
+   ![Main Editor (Owner's View)](src/Images/3.png)
+   *Collaborative editor with an enhanced user panel showing profile pictures, owner status, and voice controls. The owner has exclusive rights to remove files (note the × on tabs).*
 
-### 4. Main Editor (Owner Mode)
+4. **Main Editor (Collaborator's View)**
 
-![Owner Mode](src/Images/4.png)
-*Owner can see delete (×) buttons on file tabs to remove files.*
+   ![Main Editor (Collaborator's View)](src/Images/4.png)
+   *Experience seamless collaboration with real-time code sync, integrated text chat, and voice call controls.*
 
-### 5. Checkpoints
+5. **Code Execution**
 
-![Checkpoints](src/Images/5.png)
-*Restore previous code checkpoints for each file directly from the editor.*
+   ![Code Execution](src/Images/5.png)
+   *Execute the code currently open in the editor and view the output instantly in the console.*
 
-### 6. Code Exection
+6. **Checkpoints**
 
-![Code Execution](src/Images/6.png)
-*Execute the code opened currently in the editor.*
+   ![Checkpoints](src/Images/6.png)
+   *Easily save and restore previous versions of your code for any file, ensuring you never lose progress.*
 
 ---
 
@@ -115,77 +117,87 @@ Follow these steps to get CadenceCode up and running on your local machine.
 
 ### Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/i-amprince/CadenceCode.git
-    ```
+#### Clone the repository:
 
-2.  **Navigate to the project directory:**
-    ```bash
-    cd CadenceCode
-    ```
+```bash
+git clone https://github.com/i-amprince/CadenceCode.git
+```
+
+#### Navigate to the project directory:
+
+```bash
+cd CadenceCode
+```
 
 ### Backend Setup
 
-1.  **Navigate to the `Server` directory:**
-    ```bash
-    cd Server
-    ```
+#### Navigate to the `Server` directory:
 
-2.  **Install backend dependencies:**
-    ```bash
-    npm install
-    ```
+```bash
+cd Server
+```
 
-3.  **Create a `.env` file:**
-    Create a file named `.env` in the `Server` folder and populate it with your environment variables. You can refer to `.env.example` for the structure.
+#### Install backend dependencies:
 
-    ```
-    PORT=5000
-    MONGO_URI=mongodb://localhost:27017/collab-editor
-    CLIENT_URL=http://localhost:3000
+```bash
+npm install
+```
 
-    JUDGE0_API_KEY=your_judge0_api_key
-    JUDGE0_API_HOST=judge0-ce.p.rapidapi.com
+#### Create a `.env` file:
 
-    GOOGLE_CLIENT_ID=your_google_client_id
-    JWT_SECRET=your_super_strong_jwt_secret
-    ```
-    * Replace `your_judge0_api_key` with your actual Judge0 API Key from RapidAPI.
-    * Replace `your_google_client_id` with your Google OAuth 2.0 Client ID.
-    * Replace `your_super_strong_jwt_secret` with a strong, random secret key for JWT.
+Create a file named `.env` in the `Server` folder and populate it with your environment variables. You can refer to `.env.example` for the structure.
 
-4.  **Start the backend server:**
-    ```bash
-    npm start
-    ```
-    The backend server will typically run on `http://localhost:5000`.
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/collab-editor
+CLIENT_URL=http://localhost:3000
+
+JUDGE0_API_KEY=your_judge0_api_key
+JUDGE0_API_HOST=judge0-ce.p.rapidapi.com
+
+GOOGLE_CLIENT_ID=your_google_client_id
+JWT_SECRET=your_super_strong_jwt_secret
+```
+* Replace `your_judge0_api_key` with your actual Judge0 API Key from RapidAPI.
+* Replace `your_google_client_id` with your Google OAuth 2.0 Client ID.
+* Replace `your_super_strong_jwt_secret` with a strong, random secret key for JWT.
+
+#### Start the backend server:
+
+```bash
+npm start
+```
+The backend server will typically run on `http://localhost:5000`.
 
 ### Frontend Setup
 
-1.  **Navigate back to the project root directory:**
-    ```bash
-    cd ../
-    ```
+#### Navigate back to the project root directory:
 
-2.  **Install frontend dependencies:**
-    ```bash
-    npm install
-    ```
+```bash
+cd ../
+```
 
-3.  **Create a `.env` file:**
-    Create a file named `.env` in the root (frontend) folder and add your Google Client ID:
+#### Install frontend dependencies:
 
-    ```
-    REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
-    ```
-    * Replace `your_google_client_id` with the same Google OAuth 2.0 Client ID used in the backend.
+```bash
+npm install
+```
 
-4.  **Start the frontend development server:**
-    ```bash
-    npm start
-    ```
-    The application will open in your browser, typically at [http://localhost:3000](http://localhost:3000).
+#### Create a `.env` file:
+
+Create a file named `.env` in the root (frontend) folder and add your Google Client ID:
+
+```env
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+```
+* Replace `your_google_client_id` with the same Google OAuth 2.0 Client ID used in the backend.
+
+#### Start the frontend development server:
+
+```bash
+npm start
+```
+The application will open in your browser, typically at [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -197,7 +209,7 @@ Contributions are always welcome! If you have suggestions for improvements, new 
 
 ## 📝 License
 
-This project is licensed under the [MIT License](LICENSE)
+This project is licensed under the MIT License
 
 ---
 
