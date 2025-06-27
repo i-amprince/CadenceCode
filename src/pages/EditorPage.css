@@ -148,19 +148,17 @@
 }
 
 .clientsList {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 8px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(5px);
-  min-height: 60px;
-  position: relative;
-  overflow: hidden;
+  /* Revert to original: no fixed height, no card background, just default spacing */
+  margin-bottom: 16px;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
+  gap: 0;
+  max-height: none;
+  min-height: 0;
+  overflow: visible;
 }
 
 .clientsList::before {
@@ -680,4 +678,29 @@
   outline: 2px solid #4aee88;
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+.voiceChatWrapper {
+  /* Revert to original: no fixed height, no card background, just default spacing */
+  margin-bottom: 16px;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: none;
+  min-height: 0;
+  overflow: visible;
+}
+
+.voiceUserList {
+  /* Revert to original: no fixed height, just default */
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+/* Custom scrollbar for sidebar lists */
+.clientsList::-webkit-scrollbar,
+.voiceUserList::-webkit-scrollbar {
+  display: none;
 }

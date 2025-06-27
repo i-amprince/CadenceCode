@@ -4,8 +4,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../socket';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import VoiceChat from './VoiceChat';
 import LogoImg from '../Images/img.svg';
-import './EditorPage.css'; 
+import './EditorPage.css';
 
 export default function EditorPage() {
   const codeRef = useRef({});
@@ -32,7 +33,7 @@ export default function EditorPage() {
       }
       setClients(clients);
 
-      //latest code send
+      // Send latest code to the newly joined client
       if (codeRef.current && typeof codeRef.current === 'object') {
         for (const [fileName, code] of Object.entries(codeRef.current)) {
           socket.emit('CODE_CHANGE', { roomId, fileName, code });
@@ -97,7 +98,6 @@ export default function EditorPage() {
     <div className="mainWrap">
       <div className="aside">
         <div className="asideInner">
-         
           <div className="app-header">
             <img className="logo-image" src={LogoImg} alt="CadenceCode Logo" />
             <h1 className="app-name">CadenceCode</h1>
@@ -117,10 +117,21 @@ export default function EditorPage() {
               />
             ))}
           </div>
+
+          {/* 🎙️ Voice Chat */}
+          <div className="voiceChatWrapper">
+            <VoiceChat roomId={roomId} userList={clients} />
+          </div>
         </div>
-        <button className="btn copyBtn" onClick={copyRoomId}>Copy ROOM ID</button>
-        <button className="btn leaveBtn" onClick={leaveRoom}>Leave</button>
+
+        <button className="btn copyBtn" onClick={copyRoomId}>
+          Copy ROOM ID
+        </button>
+        <button className="btn leaveBtn" onClick={leaveRoom}>
+          Leave
+        </button>
       </div>
+
       <div className="editorWrap">
         <Editor
           roomId={roomId}
