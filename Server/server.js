@@ -1,3 +1,4 @@
+require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -6,14 +7,12 @@ const axios = require('axios');
 const Code = require('./models/Code');
 const authRoutes = require('./routes/Auth');
 const roomRoutes = require('./routes/room');
-
-require('dotenv').config();
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-
-app.use(express.json());
 const cors = require('cors');
+app.use(express.json());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 app.use('/api/auth', authRoutes);
@@ -28,6 +27,7 @@ const io = new Server(server, {
 });
 
 const userSocketMap = {};
+const voiceUsers = {}; // ✅ VOICE CHAT user tracking
 
 function getClients(roomId) {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(socketId => ({
@@ -40,6 +40,7 @@ function getClients(roomId) {
 io.on('connection', (socket) => {
   console.log('🟢 Connected:', socket.id);
 
+  // --- Collaborative Code + Auth ---
   socket.on('JOIN', async ({ roomId, username, picture }) => {
     userSocketMap[socket.id] = { username, picture };
     socket.join(roomId);
@@ -92,32 +93,28 @@ io.on('connection', (socket) => {
       await doc.save();
       socket.emit('SAVE_SUCCESS');
       io.to(roomId).emit('CHECKPOINT_UPDATED', { fileName });
-      
     } catch (err) {
       console.error('❌ Save error:', err);
     }
   });
 
-  //added extra 
   socket.on('DELETE_FILE', async ({ roomId, fileName, requester }) => {
-  try {
-    const room = await Code.findOne({ roomId });
-    if (!room) return;
+    try {
+      const room = await Code.findOne({ roomId });
+      if (!room) return;
 
-    if (room.creator !== requester) {
-      return socket.emit('ERROR', { message: 'Only the owner can delete files.' });
+      if (room.creator !== requester) {
+        return socket.emit('ERROR', { message: 'Only the owner can delete files.' });
+      }
+
+      room.files = room.files.filter(f => f.name !== fileName);
+      await room.save();
+      io.to(roomId).emit('FILE_DELETED', { fileName });
+    } catch (err) {
+      console.error('DELETE_FILE error:', err);
+      socket.emit('ERROR', { message: 'Server error during deletion.' });
     }
-
-    room.files = room.files.filter(f => f.name !== fileName);
-    await room.save();
-    io.to(roomId).emit('FILE_DELETED', { fileName });
-  } catch (err) {
-    console.error('DELETE_FILE error:', err);
-    socket.emit('ERROR', { message: 'Server error during deletion.' });
-  }
-});
-
-
+  });
 
   socket.on('RUN_CODE', async ({ code, languageId }) => {
     const submissionOptions = {
@@ -180,6 +177,18 @@ io.on('connection', (socket) => {
     }
   });
 
+  // ✅ VOICE CHAT HANDLERS
+  socket.on('VOICE_JOIN', ({ roomId }) => {
+    voiceUsers[roomId] = voiceUsers[roomId] || [];
+    voiceUsers[roomId].push(socket.id);
+    const users = voiceUsers[roomId].filter(id => id !== socket.id);
+    socket.emit('VOICE_USERS', users);
+  });
+
+  socket.on('VOICE_SIGNAL', ({ to, from, data }) => {
+    io.to(to).emit('VOICE_SIGNAL', { from, data });
+  });
+
   socket.on('disconnecting', () => {
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
@@ -189,6 +198,13 @@ io.on('connection', (socket) => {
       });
     });
     delete userSocketMap[socket.id];
+  });
+
+  // ✅ Clean up VOICE_USERS on disconnect
+  socket.on('disconnect', () => {
+    Object.keys(voiceUsers).forEach(roomId => {
+      voiceUsers[roomId] = (voiceUsers[roomId] || []).filter(id => id !== socket.id);
+    });
   });
 });
 
