@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
 import Avatar from 'react-avatar';
 
-export default function VoiceChat({ roomId, userList }) {
+export default function VoiceChat({ roomId, userList, showHeader = true }) {
   const [isMuted, setIsMuted] = useState(false);
   const [voiceReady, setVoiceReady] = useState(false);
   const [speaking, setSpeaking] = useState({});
@@ -148,9 +148,11 @@ export default function VoiceChat({ roomId, userList }) {
   const [imgError, setImgError] = useState({});
 
   return (
-    <div style={{ marginTop: 16 }}>
-      <h4 style={{ color: '#4aee88', marginBottom: 8 }}>Voice Chat</h4>
-      <div className="voiceUserList" style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 8 }}>
+    <div>
+      {showHeader && (
+        <h4 style={{ color: '#4aee88', marginBottom: 8 }}>Voice Chat</h4>
+      )}
+      <div className="voiceUserList" style={{ maxHeight: 120, overflowY: 'auto', marginBottom: 8 }}>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
           {userList.map(u => (
             <li

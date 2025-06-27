@@ -103,33 +103,36 @@ export default function EditorPage() {
             <h1 className="app-name">CadenceCode</h1>
           </div>
 
-          <h3>Connected</h3>
-          <div className="clientsList">
-            {clients.map((client) => (
-              <Client
-                key={client.socketId}
-                username={client.username}
-                picture={client.picture}
-                socketId={client.socketId}
-                mySocketId={socket.id}
-                isOwner={creator === currentEmail}
-                myEmail={currentEmail}
-              />
-            ))}
+          <div className="connected-section">
+            <h3>Connected</h3>
+            <div className="clientsList">
+              <div className="clientsList-scroll">
+                {clients.map((client) => (
+                  <Client
+                    key={client.socketId}
+                    username={client.username}
+                    picture={client.picture}
+                    socketId={client.socketId}
+                    mySocketId={socket.id}
+                    isOwner={creator === currentEmail}
+                    myEmail={currentEmail}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* 🎙️ Voice Chat */}
+          {/* Voice Chat header OUTSIDE box */}
+          <h3 className="voice-chat-header">Voice Chat</h3>
           <div className="voiceChatWrapper">
-            <VoiceChat roomId={roomId} userList={clients} />
+            <VoiceChat roomId={roomId} userList={clients} showHeader={false} />
+          </div>
+
+          <div className="button-container">
+            <button className="btn copyBtn" onClick={copyRoomId}>Copy ROOM ID</button>
+            <button className="btn leaveBtn" onClick={leaveRoom}>Leave</button>
           </div>
         </div>
-
-        <button className="btn copyBtn" onClick={copyRoomId}>
-          Copy ROOM ID
-        </button>
-        <button className="btn leaveBtn" onClick={leaveRoom}>
-          Leave
-        </button>
       </div>
 
       <div className="editorWrap">
