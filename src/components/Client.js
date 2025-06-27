@@ -8,11 +8,14 @@ const Client = ({
   picture,
   socketId,
   mySocketId,
-  isOwner,
-  myEmail,
+  email,
+  ownerEmail,
 }) => {
   const [imgSrc, setImgSrc] = useState(picture);
   const clientClassName = `client ${socketId === mySocketId ? 'currentUser' : ''}`;
+
+  const isOwner = email === ownerEmail;
+  const amIOwner = ownerEmail && mySocketId && email !== undefined && ownerEmail === JSON.parse(localStorage.getItem('user'))?.email;
 
   const handleKick = () => {
     if (window.confirm(`Kick ${username}?`)) {
@@ -31,8 +34,9 @@ const Client = ({
       />
       <span className="username">
         {username}
+        {isOwner && <span className="ownerLabel"> (Owner)</span>}
         {socketId === mySocketId && <span className="youLabel"> (You)</span>}
-        {isOwner && socketId !== mySocketId && (
+        {amIOwner && socketId !== mySocketId && !isOwner && (
           <span className="kickBtn" onClick={handleKick}>❌ Kick</span>
         )}
       </span>

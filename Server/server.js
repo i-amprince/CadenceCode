@@ -34,6 +34,7 @@ function getClients(roomId) {
     socketId,
     username: userSocketMap[socketId]?.username,
     picture: userSocketMap[socketId]?.picture,
+    email: userSocketMap[socketId]?.email, // include email for owner detection
   }));
 }
 
@@ -41,8 +42,8 @@ io.on('connection', (socket) => {
   console.log('🟢 Connected:', socket.id);
 
   // --- Collaborative Code + Auth ---
-  socket.on('JOIN', async ({ roomId, username, picture }) => {
-    userSocketMap[socket.id] = { username, picture };
+  socket.on('JOIN', async ({ roomId, username, picture, email }) => {
+    userSocketMap[socket.id] = { username, picture, email }; // store email
     socket.join(roomId);
 
     const clients = getClients(roomId);

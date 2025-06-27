@@ -58,6 +58,7 @@ export default function EditorPage() {
       roomId,
       username: location.state?.username,
       picture: user?.picture,
+      email: user?.email, // send email to backend
     });
 
     socket.on('JOINED', handleJoined);
@@ -114,8 +115,8 @@ export default function EditorPage() {
                     picture={client.picture}
                     socketId={client.socketId}
                     mySocketId={socket.id}
-                    isOwner={creator === currentEmail}
-                    myEmail={currentEmail}
+                    email={client.email} // pass email for owner check
+                    ownerEmail={creator} // pass creator email
                   />
                 ))}
               </div>
