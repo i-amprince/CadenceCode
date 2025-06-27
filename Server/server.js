@@ -27,21 +27,20 @@ const io = new Server(server, {
 });
 
 const userSocketMap = {};
-const voiceUsers = {}; // ✅ VOICE CHAT user tracking
+const voiceUsers = {}; //for voice chat useresss
 
 function getClients(roomId) {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(socketId => ({
     socketId,
     username: userSocketMap[socketId]?.username,
     picture: userSocketMap[socketId]?.picture,
-    email: userSocketMap[socketId]?.email, // include email for owner detection
+    email: userSocketMap[socketId]?.email, //email sending for owner last insertionnn
   }));
 }
 
 io.on('connection', (socket) => {
   console.log('🟢 Connected:', socket.id);
 
-  // --- Collaborative Code + Auth ---
   socket.on('JOIN', async ({ roomId, username, picture, email }) => {
     userSocketMap[socket.id] = { username, picture, email }; // store email
     socket.join(roomId);
@@ -178,7 +177,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // ✅ VOICE CHAT HANDLERS
+  //voiices in herrrr
   socket.on('VOICE_JOIN', ({ roomId }) => {
     voiceUsers[roomId] = voiceUsers[roomId] || [];
     voiceUsers[roomId].push(socket.id);
@@ -201,7 +200,7 @@ io.on('connection', (socket) => {
     delete userSocketMap[socket.id];
   });
 
-  // ✅ Clean up VOICE_USERS on disconnect
+
   socket.on('disconnect', () => {
     Object.keys(voiceUsers).forEach(roomId => {
       voiceUsers[roomId] = (voiceUsers[roomId] || []).filter(id => id !== socket.id);

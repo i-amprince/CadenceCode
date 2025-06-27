@@ -33,7 +33,7 @@ export default function EditorPage() {
       }
       setClients(clients);
 
-      // Send latest code to the newly joined client
+      //latest code bhej rheee to  the newly joined client
       if (codeRef.current && typeof codeRef.current === 'object') {
         for (const [fileName, code] of Object.entries(codeRef.current)) {
           socket.emit('CODE_CHANGE', { roomId, fileName, code });
@@ -123,7 +123,6 @@ export default function EditorPage() {
             </div>
           </div>
 
-          {/* Voice Chat header OUTSIDE box */}
           <h3 className="voice-chat-header">Voice Chat</h3>
           <div className="voiceChatWrapper">
             <VoiceChat roomId={roomId} userList={clients} showHeader={false} />

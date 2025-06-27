@@ -9,9 +9,9 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
   const localStreamRef = useRef(null);
   const peersRef = useRef({});
   const audioElementsRef = useRef({});
-  const audioCtxRef = useRef(null); // Shared AudioContext
+  const audioCtxRef = useRef(null); //audio context newwly learned
 
-  // --- WebRTC Signaling ---
+  // webrtc thing
   useEffect(() => {
     let mounted = true;
     if (!audioCtxRef.current) {
@@ -20,7 +20,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
       if (!mounted) return;
       localStreamRef.current = stream;
-      // Set initial mute state
+      
       stream.getAudioTracks().forEach(track => {
         track.enabled = !isMuted;
       });
@@ -50,7 +50,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
           try {
             await pc.setRemoteDescription(new window.RTCSessionDescription(data.sdp));
             if (data.sdp.type === 'offer') {
-              // Only answer if not already have a local description
+              
               if (pc.signalingState === 'stable' || pc.signalingState === 'have-remote-offer') {
                 const answer = await pc.createAnswer();
                 await pc.setLocalDescription(answer);
@@ -58,7 +58,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
               }
             }
           } catch (e) {
-            // Ignore errors from duplicate/late offers
+              console.log(e);
           }
         } else if (data.candidate) {
           try {
@@ -82,7 +82,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
     };
   }, [roomId]);
 
-  // --- Mute/Unmute ---
+ //second last update doingggg
   const toggleMute = () => {
     if (localStreamRef.current) {
       const newMuted = !isMuted;
@@ -115,7 +115,8 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
         audioElementsRef.current[peerId] = audio;
       }
       audio.srcObject = event.streams[0];
-      // Speaking detection using shared AudioContext
+      
+      //audio context used here to check whether someone is speaking or not
       const analyser = audioCtxRef.current.createAnalyser();
       const src = audioCtxRef.current.createMediaStreamSource(event.streams[0]);
       src.connect(analyser);
@@ -136,7 +137,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
           await pc.setLocalDescription(offer);
           socket.emit('VOICE_SIGNAL', { to: peerId, from: socket.id, data: { sdp: pc.localDescription } });
         } catch (e) {
-          // Ignore negotiation errors
+          console.log(e);// update later
         }
       };
     }
@@ -144,7 +145,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
     return pc;
   }
 
-  // --- UI: Show mic icon on hover for self ---
+  
   const [imgError, setImgError] = useState({});
 
   return (
