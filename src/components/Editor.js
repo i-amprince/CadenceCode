@@ -27,6 +27,7 @@ export default function Editor({ roomId, onCodeChange }) {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
+  const [clients, setClients] = useState([]); // Add this line
   const chatRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('user')) || { name: 'Guest', email: '' };
 
@@ -86,7 +87,10 @@ export default function Editor({ roomId, onCodeChange }) {
       toast.error(message);
     });
 
-   
+    socket.on('JOINED', ({ clients }) => {
+      setClients(clients);
+    });
+
     socket.on('CHECKPOINT_UPDATED', async () => {
       await fetchCheckpoint();
       toast.success('Checkpoints updated');
@@ -103,6 +107,7 @@ export default function Editor({ roomId, onCodeChange }) {
       socket.off('NEW_FILE_ADDED');
       socket.off('FILE_DELETED');
       socket.off('ERROR');
+      socket.off('JOINED');
       socket.off('CHECKPOINT_UPDATED'); 
     };
   }, [roomId]);
@@ -180,9 +185,11 @@ export default function Editor({ roomId, onCodeChange }) {
   const sendChat = () => {
     const msg = chatInput.trim();
     if (!msg) return;
+    // Find the current user in clients list
+    const me = clients.find(c => c.socketId === socket.id);
     socket.emit('CHAT_MESSAGE', {
       roomId,
-      username: user.name,
+      username: me?.username || user.name,
       message: msg,
     });
     setChatInput('');

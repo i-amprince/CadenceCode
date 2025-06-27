@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from 'react-avatar';
 import './Client.css';
 import { socket } from '../socket';
@@ -11,6 +11,7 @@ const Client = ({
   isOwner,
   myEmail,
 }) => {
+  const [imgSrc, setImgSrc] = useState(picture);
   const clientClassName = `client ${socketId === mySocketId ? 'currentUser' : ''}`;
 
   const handleKick = () => {
@@ -21,7 +22,13 @@ const Client = ({
 
   return (
     <div className={clientClassName}>
-      <Avatar name={username} src={picture} size="50" round="14px" />
+      <Avatar
+        name={username}
+        src={imgSrc}
+        size="50"
+        round="14px"
+        onError={() => setImgSrc(null)}
+      />
       <span className="username">
         {username}
         {socketId === mySocketId && <span className="youLabel"> (You)</span>}

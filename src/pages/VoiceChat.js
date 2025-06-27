@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { socket } from '../socket';
+import Avatar from 'react-avatar';
 
 export default function VoiceChat({ roomId, userList }) {
   const [isMuted, setIsMuted] = useState(false);
@@ -144,6 +145,8 @@ export default function VoiceChat({ roomId, userList }) {
   }
 
   // --- UI: Show mic icon on hover for self ---
+  const [imgError, setImgError] = useState({});
+
   return (
     <div style={{ marginTop: 16 }}>
       <h4 style={{ color: '#4aee88', marginBottom: 8 }}>Voice Chat</h4>
@@ -161,15 +164,14 @@ export default function VoiceChat({ roomId, userList }) {
                 padding: '4px 8px'
               }}
             >
-              {u.picture ? (
-                <img
-                  src={u.picture}
-                  alt={u.username}
-                  style={{ width: 28, height: 28, borderRadius: 8, objectFit: 'cover', marginRight: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
-                />
-              ) : (
-                <span style={{ width: 28, height: 28, borderRadius: 8, background: '#4aee88', color: '#1c1c1c', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 15, marginRight: 8 }}>{u.username?.[0]?.toUpperCase()}</span>
-              )}
+              <Avatar
+                name={u.username}
+                src={u.picture && !imgError[u.socketId] ? u.picture : null}
+                size="28"
+                round="8px"
+                onError={() => setImgError(prev => ({ ...prev, [u.socketId]: true }))}
+                style={{ marginRight: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
+              />
               <span>{u.username}</span>
               {u.socketId === socket.id ? (
                 <span
