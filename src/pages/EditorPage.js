@@ -128,7 +128,7 @@ export default function EditorPage() {
             <VoiceChat roomId={roomId} userList={clients} showHeader={false} />
           </div>
 
-          <div className="button-container">
+          <div className="button-container" style={{ marginBottom: 0, marginTop: 24 }}>
             <button className="btn copyBtn" onClick={copyRoomId}>Copy ROOM ID</button>
             <button className="btn leaveBtn" onClick={leaveRoom}>Leave</button>
           </div>

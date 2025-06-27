@@ -1,6 +1,6 @@
 .mainWrap {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 280px 1fr;
   min-height: 100vh;
   height: 100%;
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,7 +25,7 @@
 
 .aside {
   background: linear-gradient(135deg, #1c1c1c 0%, #181818 100%);
-  padding: 16px;
+  padding: 8px;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -36,24 +36,26 @@
     2px 0 12px rgba(0, 0, 0, 0.2),
     inset -1px 0 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .asideInner {
-  flex: 1 1 0%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  gap: 16px;
+  gap: 0;
+  box-sizing: border-box;
 }
 
 .app-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid rgba(74, 238, 136, 0.3);
-  padding-bottom: 12px;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+  position: relative;
   flex-shrink: 0;
 }
 
@@ -71,10 +73,10 @@
 }
 
 .logo-image {
-  height: 40px;
-  width: 40px;
+  height: 36px;
+  width: 36px;
   flex-shrink: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 
     0 2px 8px rgba(74, 238, 136, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -89,8 +91,8 @@
 }
 
 .app-name {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #4aee88;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
   letter-spacing: 0.5px;
@@ -101,19 +103,35 @@
 }
 
 .connected-section {
-  flex-shrink: 0;
+  flex: 3 1 0%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.voiceChatWrapper {
+  flex: 2 1 0%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .asideInner h3,
 .voice-chat-header {
-  margin: 0 0 8px 0;
-  font-size: 0.95rem;
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: #b3b3b3;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding-left: 10px;
+  letter-spacing: 1px;
+  position: relative;
+  padding-left: 16px;
   flex-shrink: 0;
+  padding-top: 8px;
 }
 
 .asideInner h3::before,
@@ -124,57 +142,61 @@
   top: 50%;
   transform: translateY(-50%);
   width: 3px;
-  height: 14px;
-  background: #4aee88;
+  height: 12px;
+  background: linear-gradient(135deg, #4aee88, #36cc6f);
   border-radius: 2px;
 }
 
 .clientsList {
-  background: rgba(34, 34, 34, 0.9);
-  border-radius: 8px;
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(74, 238, 136, 0.1);
+  border-radius: 12px;
   padding: 12px;
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(6px);
-  flex: 0 0 auto;
-  max-height: calc(50vh - 200px); /* Dynamic height based on viewport */
-  overflow-y: auto;
-  margin-bottom: 12px;
+  flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .clientsList-scroll {
+  flex: 1;
+  overflow-y: auto;
   padding-right: 4px;
+  margin-right: -4px;
 }
 
 .clientsList-scroll::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .clientsList-scroll::-webkit-scrollbar-track {
-  background: rgba(74, 238, 136, 0.1);
+  background: rgba(74, 238, 136, 0.05);
   border-radius: 2px;
 }
 
 .clientsList-scroll::-webkit-scrollbar-thumb {
-  background: #4aee88;
+  background: rgba(74, 238, 136, 0.4);
   border-radius: 2px;
 }
 
 .clientsList-scroll::-webkit-scrollbar-thumb:hover {
-  background: #36cc6f;
+  background: rgba(74, 238, 136, 0.6);
 }
 
 .clientsList:empty .clientsList-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(224, 224, 224, 0.5);
+  color: rgba(179, 179, 179, 0.6);
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-align: center;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 .clientsList:empty .clientsList-scroll::after {
@@ -182,41 +204,44 @@
 }
 
 .voiceChatWrapper {
-  background: rgba(34, 34, 34, 0.9);
-  border-radius: 8px;
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(74, 238, 136, 0.1);
+  border-radius: 12px;
   padding: 12px;
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(6px);
-  flex: 0 0 auto;
-  max-height: calc(50vh - 200px); /* Dynamic height based on viewport */
-  overflow-y: auto;
-  margin-bottom: 12px;
-  min-height: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .voiceUserList {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
   overflow-y: auto;
   padding-right: 4px;
+  margin-right: -4px;
 }
 
 .voiceUserList::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .voiceUserList::-webkit-scrollbar-track {
-  background: rgba(74, 238, 136, 0.1);
+  background: rgba(74, 238, 136, 0.05);
   border-radius: 2px;
 }
 
 .voiceUserList::-webkit-scrollbar-thumb {
-  background: #4aee88;
+  background: rgba(74, 238, 136, 0.4);
   border-radius: 2px;
 }
 
 .voiceUserList::-webkit-scrollbar-thumb:hover {
-  background: #36cc6f;
+  background: rgba(74, 238, 136, 0.6);
 }
 
 .voiceUserList ul {
@@ -228,67 +253,89 @@
 .voiceUserList li {
   display: flex;
   align-items: center;
-  padding: 8px;
-  margin-bottom: 4px;
-  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.2s ease;
+  font-size: 0.85rem;
 }
 
 .voiceUserList li:hover {
-  background: rgba(74, 238, 136, 0.1);
+  background: rgba(74, 238, 136, 0.08);
   border-color: rgba(74, 238, 136, 0.15);
+  transform: translateX(2px);
 }
 
 .voiceUserList li.speaking {
-  background: rgba(74, 238, 136, 0.15);
+  background: rgba(74, 238, 136, 0.12);
   border-color: rgba(74, 238, 136, 0.25);
   box-shadow: 0 2px 8px rgba(74, 238, 136, 0.15);
 }
 
 .voice-permission-notice {
-  color: rgba(224, 224, 224, 0.7);
-  font-size: 0.8rem;
+  color: rgba(179, 179, 179, 0.8);
+  font-size: 0.75rem;
   text-align: center;
   font-style: italic;
   padding: 8px;
-  background: rgba(255, 193, 7, 0.1);
-  border-radius: 6px;
-  border: 1px solid rgba(255, 193, 7, 0.2);
+  background: rgba(255, 193, 7, 0.08);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 193, 7, 0.15);
   margin-top: 8px;
 }
 
 .btn {
   width: 100%;
   border: none;
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .copyBtn {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  color: #1c1c1c;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #2c2c2c 0%, #242424 100%);
+  color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(74, 238, 136, 0.2);
 }
 
 .copyBtn:hover {
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  background: linear-gradient(135deg, #343434 0%, #2c2c2c 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-color: rgba(74, 238, 136, 0.4);
 }
 
 .leaveBtn {
   background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
   color: #1a1a1a;
   box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
+  border: 1px solid rgba(74, 238, 136, 0.3);
 }
 
 .leaveBtn:hover {
@@ -300,10 +347,11 @@
 .button-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
-  padding-top: 12px;
+  padding-top: 16px;
   border-top: 1px solid rgba(74, 238, 136, 0.2);
+  margin-top: auto;
 }
 
 .editorWrap {
@@ -318,14 +366,14 @@
 }
 
 .connectionStatus {
-  padding: 10px;
+  padding: 10px 12px;
   background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
   color: #1a1a1a;
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 12px;
   text-align: center;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
   border: 1px solid rgba(255, 193, 7, 0.4);
 }
@@ -341,9 +389,22 @@
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(74, 238, 136, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(74, 238, 136, 0);
+  }
+}
+
+.voiceUserList li.speaking {
+  animation: pulse 2s infinite;
+}
+
 @media (max-width: 1200px) {
   .mainWrap {
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 260px 1fr;
   }
   
   .aside {
@@ -367,19 +428,23 @@
     padding: 12px;
     border-right: none;
     border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+    overflow-x: auto;
+    overflow-y: hidden;
   }
   
   .asideInner {
     flex-direction: row;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    gap: 16px;
+    flex-wrap: nowrap;
+    min-width: max-content;
   }
   
   .app-header {
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: none;
+    flex-shrink: 0;
   }
   
   .connected-section,
@@ -387,10 +452,19 @@
     display: none;
   }
   
+  .button-container {
+    flex-direction: row;
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+    flex-shrink: 0;
+  }
+  
   .btn {
-    padding: 8px;
-    font-size: 0.85rem;
+    padding: 8px 12px;
+    font-size: 0.8rem;
     min-width: 80px;
+    white-space: nowrap;
   }
   
   .editorWrap {
@@ -408,18 +482,23 @@
   }
   
   .btn {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+  
+  .asideInner {
+    gap: 12px;
   }
 }
 
 .btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.3);
+  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.4);
 }
 
 .logo-image:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.3);
+  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.4);
 }
 
 @media (prefers-contrast: high) {
@@ -467,4 +546,8 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+.btn:disabled::before {
+  display: none;
 }

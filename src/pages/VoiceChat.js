@@ -149,11 +149,11 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
   const [imgError, setImgError] = useState({});
 
   return (
-    <div>
+    <div className="voiceChatOuter" style={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       {showHeader && (
         <h4 style={{ color: '#4aee88', marginBottom: 8 }}>Voice Chat</h4>
       )}
-      <div className="voiceUserList" style={{ maxHeight: 120, overflowY: 'auto', marginBottom: 8 }}>
+      <div className="voiceUserList" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginBottom: 8 }}>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
           {userList.map(u => (
             <li
