@@ -24,6 +24,7 @@ CadenceCode comes packed with features designed to enhance your collaborative co
 * **Cloud Code Execution:** Execute your code in the cloud via the **Judge0 API** and view the output instantly.
 * **Checkpoints:** Never lose your work! Save and restore code checkpoints for individual files directly from the editor.
 * **Integrated In-Room Chat:** Communicate effortlessly with your collaborators through the built-in text chat panel.
+* **Persistent Rooms:** You can safely close and later reopen a room with the same ID to continue working with all your files and progress preserved.
 * **Responsive & Modern UI:** Enjoy a sleek, dark-themed, and mobile-friendly interface for a comfortable coding experience on any device.
 
 ---
