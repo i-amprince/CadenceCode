@@ -1,25 +1,14 @@
+/* Editor.css - Professional Light/Glass-Morphism Theme */
+
+/* --- Main Layout --- */
 .editorContainer {
   display: grid;
   grid-template-columns: 1fr 320px;
-  height: 100vh;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%;
+  background: transparent;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow: hidden;
   position: relative;
-}
-
-.editorContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(74, 238, 136, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(74, 238, 136, 0.02) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
 }
 
 .editorMain {
@@ -27,384 +16,275 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  z-index: 1;
-  background: rgba(26, 26, 26, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 0 12px 0 0;
-  box-shadow: 
-    0 0 30px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 24px 0; /* Updated for context */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Header & File Tabs --- */
 .headerRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #2a2a2a 0%, #262626 100%);
-  border-bottom: 1px solid rgba(74, 238, 136, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   gap: 16px;
-  box-shadow: 
-    0 2px 10px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: relative;
-}
-
-.headerRow::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(74, 238, 136, 0.5) 50%, 
-    transparent 100%);
+  z-index: 10;
 }
 
 .fileTabsWrapper {
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  max-width: 65%;
-  padding: 2px 0;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.fileTabsWrapper::-webkit-scrollbar {
-  display: none;
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .fileTabs {
   display: flex;
   flex-wrap: nowrap;
   gap: 6px;
-  padding: 0 4px;
+  padding: 2px 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #667eea rgba(255, 255, 255, 0.1);
 }
+.fileTabs::-webkit-scrollbar { height: 4px; }
+.fileTabs::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+.fileTabs::-webkit-scrollbar-thumb { background: #667eea; border-radius: 2px; }
 
 .fileTab {
-  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
-  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  color: #2d3748;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   max-width: 180px;
 }
-
-.fileTab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent, 
-    rgba(74, 238, 136, 0.1), 
-    transparent);
-  transition: left 0.5s ease;
-}
-
-.fileTab:hover::before {
-  left: 100%;
-}
-
 .fileTab:hover {
-  background: linear-gradient(135deg, #444 0%, #3a3a3a 100%);
-  border-color: rgba(74, 238, 136, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-
 .fileTab.active {
-  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
-  color: #1a1a1a;
-  font-weight: 600;
-  border-color: #4aee88;
-  box-shadow: 
-    0 4px 16px rgba(74, 238, 136, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
 }
 
-.fileName {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
+.fileName { overflow: hidden; text-overflow: ellipsis; }
 
 .fileDeleteBtn {
   background: transparent;
   border: none;
   color: inherit;
   font-size: 1.1rem;
+  line-height: 1;
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 0 2px;
   border-radius: 4px;
   transition: all 0.2s ease;
   opacity: 0.7;
-  flex-shrink: 0;
 }
-
-.fileDeleteBtn:hover {
-  background: rgba(255, 85, 85, 0.2);
-  color: #ff5555;
+.fileDeleteBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+.fileDeleteBtn:hover:not(:disabled) {
+  background: rgba(255, 85, 85, 0.8);
+  color: #fff;
   opacity: 1;
-  transform: scale(1.1);
 }
-
-.fileTab.active .fileDeleteBtn:hover {
-  background: rgba(0, 0, 0, 0.2);
-  color: #1a1a1a;
+.fileTab.active .fileDeleteBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .addFileBtn {
-  margin-left: 12px;
+  margin-left: 8px;
   padding: 6px 12px;
   font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
-  color: #1a1a1a;
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
 }
-
 .addFileBtn:hover {
-  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(72, 187, 120, 0.3);
 }
 
-.addFileBtn:active {
-  transform: translateY(0);
-}
-
+/* --- Action Buttons --- */
 .actionButtons {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
-.runBtn,
-.saveBtn {
+.runBtn, .saveBtn, .checkpointSelect, .chatSendBtn {
   padding: 8px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.runBtn:hover, .saveBtn:hover {
+  transform: translateY(-2px);
 }
 
 .runBtn {
-  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
-  color: #1a1a1a;
-  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
-}
-
-.runBtn:hover {
-  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
-}
-
-.saveBtn {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
 }
-
-.saveBtn:hover {
-  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+.saveBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
 }
 
 .checkpointSelect {
-  padding: 8px 12px;
-  background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
-  color: #fff;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #2d3748;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
-
 .checkpointSelect:hover {
-  background: linear-gradient(135deg, #444 0%, #3a3a3a 100%);
-  border-color: rgba(74, 238, 136, 0.3);
+  border-color: rgba(102, 126, 234, 0.5);
 }
+.checkpointSelect option { background: #fff; color: #2d3748; }
+.checkpointSelect option:disabled { color: #888; }
 
-.checkpointSelect:focus {
-  outline: none;
-  border-color: #4aee88;
-  box-shadow: 0 0 0 3px rgba(74, 238, 136, 0.1);
-}
-
-.checkpointSelect option {
-  background: #2a2a2a;
-  color: #fff;
-  padding: 8px 12px;
-  border: none;
-}
-
-.checkpointSelect option:hover {
-  background: #4aee88;
-  color: #1a1a1a;
-}
-
-.checkpointSelect option:checked {
-  background: #4aee88;
-  color: #1a1a1a;
-}
-
-.checkpointSelect option:disabled {
-  background: #333;
-  color: #888;
-}
-
-
+/* --- Editor & Console Panes --- */
 .editorPane {
-  flex: 1;
+  flex-grow: 1;
   overflow: hidden;
   position: relative;
-  background: #1e1e1e;
-  border-radius: 0 0 8px 8px;
+  background: #f0f1fe;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: none;
+  border-bottom: none;
 }
-
-.cm-editor {
+.editorPane > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  font-size: 14px;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
-  line-height: 1.6;
 }
+.cm-editor { background-color: #f0f1fe; }
+.cm-editor.cm-focused { outline: none !important; }
 
-.cm-editor.cm-focused {
-  outline: none;
-  box-shadow: inset 0 0 20px rgba(74, 238, 136, 0.05);
+.resizer {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: ns-resize;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
 }
+.resizer:hover { background: #667eea; }
 
 .outputWrap {
-  background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
-  color: #e0e0e0;
+  background: #f5f7fa;
+  color: #24292e;
   padding: 16px;
-  height: 160px;
   overflow-y: auto;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', monospace;
   font-size: 0.875rem;
-  border-top: 1px solid rgba(74, 238, 136, 0.2);
-  position: relative;
-  backdrop-filter: blur(5px);
+  flex-shrink: 0;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: none;
+  border-radius: 0 0 20px 0;
 }
+.outputConsole { margin: 0; padding: 0; }
+.outputConsole > div { white-space: pre-wrap; line-height: 1.5; }
 
-.outputWrap::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(74, 238, 136, 0.5) 50%, 
-    transparent 100%);
+/* --- CodeMirror Theme Overrides & Scrollbar Styling --- */
+.cm-gutters {
+  background-color: #f0f1fe;
+  border-right: 1px solid #e1e4e8;
+  color: #8c95a0;
 }
-
-.outputConsole {
-  margin: 0;
-  padding: 0;
+.cm-activeLine, .cm-activeLineGutter {
+  background-color: rgba(102, 126, 234, 0.07);
 }
-
-.outputConsole > div {
-  white-space: pre-wrap;
-  line-height: 1.5;
-  padding: 2px 0;
-  border-left: 2px solid transparent;
-  padding-left: 8px;
-  transition: all 0.2s ease;
+.cm-selectionBackground, ::selection {
+  background-color: rgba(102, 126, 234, 0.2) !important;
 }
-
-.outputConsole > div:hover {
-  background: rgba(74, 238, 136, 0.05);
-  border-left-color: #4aee88;
+.cm-scroller::-webkit-scrollbar { width: 10px; }
+.cm-scroller::-webkit-scrollbar-track { background: rgba(102, 126, 234, 0.05); }
+.cm-scroller::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.4);
+  border-radius: 5px;
 }
+.cm-scroller::-webkit-scrollbar-thumb:hover { background: rgba(102, 126, 234, 0.6); }
 
+/* --- Chat Panel --- */
 .chatPanel {
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(30px);
+  color: #2d3748;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(74, 238, 136, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
   height: 100%;
   overflow: hidden;
-  position: relative;
-  backdrop-filter: blur(10px);
-  border-radius: 12px 0 0 0;
-}
-
-.chatPanel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    rgba(74, 238, 136, 0.5) 50%, 
-    transparent 100%);
 }
 
 .chatHeader {
   padding: 16px;
-  background: linear-gradient(135deg, #262626 0%, #222 100%);
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 700;
   font-size: 1rem;
-  text-align: center;
-  border-bottom: 1px solid rgba(74, 238, 136, 0.2);
-  position: relative;
-  color: #4aee88;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #2d3748;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-.chatHeader::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  right: 20%;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(74, 238, 136, 0.5) 50%, 
-    transparent 100%);
+.chatHeader span {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
 }
+.closeChatBtn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #4a5568;
+  cursor: pointer;
+  padding: 4px;
+}
+.closeChatBtn:hover { color: #2d3748; }
 
 .chatMessages {
   flex: 1;
@@ -414,249 +294,110 @@
   flex-direction: column;
   gap: 12px;
   font-size: 0.875rem;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(74, 238, 136, 0.3) transparent;
 }
-
-.chatMessages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chatMessages::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chatMessages::-webkit-scrollbar-thumb {
-  background: rgba(74, 238, 136, 0.3);
-  border-radius: 3px;
-}
-
-.chatMessages::-webkit-scrollbar-thumb:hover {
-  background: rgba(74, 238, 136, 0.5);
-}
-
 .chatMessage {
   word-wrap: break-word;
   padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  border-left: 3px solid rgba(74, 238, 136, 0.3);
-  transition: all 0.2s ease;
-  position: relative;
 }
-
-.chatMessage:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-left-color: #4aee88;
-  transform: translateX(2px);
-}
-
 .chatMessage strong {
-  color: #4aee88;
-  font-weight: 600;
-}
-
-.chatMessage span {
-  color: #e0e0e0;
-  line-height: 1.4;
+  color: #667eea;
+  font-weight: 700;
 }
 
 .chatInputWrap {
   display: flex;
   padding: 16px;
-  border-top: 1px solid rgba(74, 238, 136, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   gap: 12px;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.2);
 }
-
 .chatInput {
   flex: 1;
   padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(34, 34, 34, 0.8);
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 400;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: #2d3748;
   outline: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  transition: all 0.2s ease;
 }
-
 .chatInput:focus {
-  border-color: #4aee88;
-  background: rgba(34, 34, 34, 0.95);
-  box-shadow: 
-    0 0 0 3px rgba(74, 238, 136, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.2);
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
-
-.chatInput::placeholder {
-  color: rgba(224, 224, 224, 0.5);
-}
+.chatInput::placeholder { color: #4a5568; }
 
 .chatSendBtn {
-  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
-  color: #1a1a1a;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(74, 238, 136, 0.2);
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.2);
 }
 
-.chatSendBtn:hover {
-  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(74, 238, 136, 0.3);
-}
-
-.chatSendBtn:active {
-  transform: translateY(0);
-}
-
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(26, 26, 26, 0.5);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #4aee88 0%, #36cc6f 100%);
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #36cc6f 0%, #2db55d 100%);
-}
-
-::-webkit-scrollbar-corner {
-  background: rgba(26, 26, 26, 0.5);
-}
-
-
-@media (max-width: 1200px) {
-  .editorContainer {
-    grid-template-columns: 1fr 280px;
-  }
-  
-  .fileTabsWrapper {
-    max-width: 55%;
-  }
-  
-  .actionButtons {
-    gap: 8px;
-  }
-  
-  .runBtn,
-  .saveBtn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-  }
-}
+/* --- Mobile & Responsive Overrides --- */
+.mobileChatToggle { display: none; }
+.overlay { display: none; }
 
 @media (max-width: 900px) {
-  .editorContainer {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 250px;
+  .editorContainer { grid-template-columns: 1fr; }
+  .editorMain { border-radius: 0; }
+  .headerRow { flex-wrap: wrap; padding: 8px 12px; }
+  .fileTabsWrapper { width: 100%; order: 2; padding-top: 8px; }
+  .actionButtons { width: 100%; order: 1; justify-content: space-between; }
+
+  .mobileChatToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: #fff;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.2);
   }
-  
+
   .chatPanel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 85%;
+    max-width: 320px;
+    height: 100%;
+    z-index: 101;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
     border-left: none;
-    border-top: 1px solid rgba(74, 238, 136, 0.2);
-    border-radius: 0;
+    box-shadow: -5px 0 30px rgba(0,0,0,0.2);
   }
+  .chatPanel.open { transform: translateX(0); }
+  .closeChatBtn { display: block; }
   
-  .headerRow {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .fileTabsWrapper {
-    max-width: 100%;
-    order: 2;
-    width: 100%;
-  }
-  
-  .actionButtons {
-    order: 1;
-  }
-}
-
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes slideIn {
-  from {
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+    z-index: 100;
     opacity: 0;
-    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
 }
 
-.fileTab {
-  animation: slideIn 0.3s ease-out;
-}
-
-.chatMessage {
-  animation: slideIn 0.2s ease-out;
-}
-
-.runBtn:focus,
-.saveBtn:focus,
-.chatSendBtn:focus,
-.addFileBtn:focus {
-  outline: none;
-  box-shadow: 
-    0 0 0 3px rgba(74, 238, 136, 0.3),
-    0 4px 16px rgba(74, 238, 136, 0.2);
-}
-
-.fileTab:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(74, 238, 136, 0.5);
-}
-
-
-@media (prefers-contrast: high) {
-  .fileTab.active {
-    background: #4aee88;
-    color: #000;
-    border: 2px solid #000;
-  }
-  
-  .runBtn,
-  .saveBtn,
-  .chatSendBtn,
-  .addFileBtn {
-    border: 2px solid currentColor;
-  }
-}
-
-
+/* --- Accessibility & Focus States --- */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+.runBtn:focus, .saveBtn:focus, .chatSendBtn:focus, .addFileBtn:focus, .checkpointSelect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
 }
