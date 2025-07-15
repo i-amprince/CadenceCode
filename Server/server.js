@@ -15,7 +15,13 @@ const cors = require('cors');
 app.use(express.json());
 
 // Set CORS to allow all origins
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({
+  origin: [
+    'https://cadence-code.vercel.app',
+    'http://localhost:3000'
+  ],
+  credentials: true,
+}));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/room', roomRoutes);
