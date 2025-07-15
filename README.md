@@ -74,12 +74,12 @@ CadenceCode is built using a modern and robust tech stack:
 
 1. **Login Page**
 
-   ![Login Page](src/Images/1.png)
+   ![Login Page](frontend/src/Images/1.png)
    *Google OAuth login for secure authentication.*
 
 2. **Room Entry**
 
-   ![Room Entry](src/Images/2.png)
+   ![Room Entry](frontend/src/Images/2.png)
    *Enter Room ID, Username, and Room Password to join or create a room.*
 
 3. **Main Editor (Owner's View)**
