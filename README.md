@@ -84,22 +84,22 @@ CadenceCode is built using a modern and robust tech stack:
 
 3. **Main Editor (Owner's View)**
 
-   ![Main Editor (Owner's View)](src/Images/3.png)
+   ![Main Editor (Owner's View)](frontend/src/Images/3.png)
    *Collaborative editor with an enhanced user panel showing profile pictures, owner status, and voice controls. The owner has exclusive rights to remove files (note the × on tabs).*
 
 4. **Main Editor (Collaborator's View)**
 
-   ![Main Editor (Collaborator's View)](src/Images/4.png)
+   ![Main Editor (Collaborator's View)](frontend/src/Images/4.png)
    *Experience seamless collaboration with real-time code sync, integrated text chat, and voice call controls.*
 
 5. **Code Execution**
 
-   ![Code Execution](src/Images/5.png)
+   ![Code Execution](frontend/src/Images/5.png)
    *Execute the code currently open in the editor and view the output instantly in the console.*
 
 6. **Checkpoints**
 
-   ![Checkpoints](src/Images/6.png)
+   ![Checkpoints](frontend/src/Images/6.png)
    *Easily save and restore previous versions of your code for any file, ensuring you never lose progress.*
 
 ---
