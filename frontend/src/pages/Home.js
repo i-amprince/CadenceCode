@@ -37,7 +37,7 @@ export default function Home() {
 
         try {
             const user = JSON.parse(localStorage.getItem('user'));
-            await axios.post('http://localhost:5000/api/room/create', {
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/room/create`, {
                 roomId,
                 password,
                 creator: user?.email || username,
@@ -55,7 +55,7 @@ export default function Home() {
         }
 
         try {
-            await axios.post('http://localhost:5000/api/room/join', {
+            await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/room/join`, {
                 roomId,
                 password,
             });

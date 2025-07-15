@@ -74,7 +74,7 @@ export default function EditorPage() {
   }, [location.state, navigate, roomId, user?.picture]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/room/${roomId}/info`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`)
       .then((res) => res.json())
       .then((data) => setCreator(data.creator))
       .catch(() => {});

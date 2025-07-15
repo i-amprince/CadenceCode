@@ -34,7 +34,7 @@ export default function Editor({ roomId, onCodeChange }) {
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/room/${roomId}/info`);
+        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`);
         const data = await res.json();
         setOwnerEmail(data.creator);
       } catch (err) {
@@ -126,7 +126,7 @@ export default function Editor({ roomId, onCodeChange }) {
 
   const fetchCheckpoint = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/room/${roomId}/checkpoints`);
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/checkpoints`);
       const data = await res.json();
       setCheckpoints(data.checkpoints || []);
     } catch {
