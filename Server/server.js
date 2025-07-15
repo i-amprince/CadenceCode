@@ -13,7 +13,9 @@ const app = express();
 const server = http.createServer(app);
 const cors = require('cors');
 app.use(express.json());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+// Set CORS to allow all origins
+app.use(cors({ origin: '*', credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/room', roomRoutes);
@@ -23,7 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] },
+  cors: { origin: '*', methods: ['GET', 'POST'] },
 });
 
 const userSocketMap = {};
