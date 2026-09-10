@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { socket } from '../socket';
@@ -7,18 +7,15 @@ import Editor from '../components/Editor';
 import VoiceChat from './VoiceChat';
 import LogoImg from '../Images/img.svg';
 import './EditorPage.css';
-// --- ADDED: Import icons for the mobile menu buttons ---
 import { FiMenu, FiX } from 'react-icons/fi';
 
 export default function EditorPage() {
-  const codeRef = useRef({});
   const location = useLocation();
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [creator, setCreator] = useState('');
-  const user = JSON.parse(localStorage.getItem('user'));
-  const currentEmail = user?.email;
+  const user = JSON.parse(localStorage.getItem('user')); //fetched userr
 
   // --- ADDED: State to manage the mobile menu's visibility ---
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,11 +41,6 @@ export default function EditorPage() {
       }
       setClients(clients);
 
-      if (codeRef.current && typeof codeRef.current === 'object') {
-        for (const [fileName, code] of Object.entries(codeRef.current)) {
-          socket.emit('CODE_CHANGE', { roomId, fileName, code });
-        }
-      }
     };
 
     const handleDisconnected = ({ socketId, username }) => {
@@ -63,13 +55,16 @@ export default function EditorPage() {
       navigate('/');
     };
 
-    socket.connect();
-    socket.emit('JOIN', {
+    const joinRoom = () => socket.emit('JOIN', {
       roomId,
       username: location.state?.username,
       picture: user?.picture,
       email: user?.email,
     });
+
+    socket.on('connect', joinRoom);
+    socket.connect();
+    if (socket.connected) joinRoom();
 
     socket.on('JOINED', handleJoined);
     socket.on('DISCONNECTED', handleDisconnected);
@@ -77,6 +72,7 @@ export default function EditorPage() {
 
     return () => {
       socket.disconnect();
+      socket.off('connect', joinRoom);
       socket.off('JOINED', handleJoined);
       socket.off('DISCONNECTED', handleDisconnected);
       socket.off('KICKED', handleKicked);
@@ -84,7 +80,7 @@ export default function EditorPage() {
   }, [location.state, navigate, roomId, user?.picture, user?.email]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`) //everyone has creator set
       .then((res) => res.json())
       .then((data) => setCreator(data.creator))
       .catch(() => {});
@@ -141,7 +137,7 @@ export default function EditorPage() {
               <div className="clientsList">
                 <div className="clientsList-scroll">
                   {clients.map((client) => (
-                    <Client
+                    <Client         //passing things here
                       key={client.socketId}
                       username={client.username}
                       picture={client.picture}
@@ -168,12 +164,7 @@ export default function EditorPage() {
         </div>
 
         <div className="editorWrap">
-          <Editor
-            roomId={roomId}
-            onCodeChange={(codeObj) => {
-              codeRef.current = codeObj;
-            }}
-          />
+          <Editor roomId={roomId} onCodeChange={() => {}} />
         </div>
       </div>
     </>
