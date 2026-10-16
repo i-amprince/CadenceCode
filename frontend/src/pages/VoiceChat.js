@@ -10,6 +10,10 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
   const peersRef = useRef({});
   const audioElementsRef = useRef({});
   const audioCtxRef = useRef(null); //audio context newwly learned
+  // Read mute state inside the WebRTC effect without re-running it (and
+  // reconnecting every peer) each time the user toggles mute.
+  const isMutedRef = useRef(isMuted);
+  isMutedRef.current = isMuted;
 
   // webrtc thing
   useEffect(() => {
@@ -22,7 +26,7 @@ export default function VoiceChat({ roomId, userList, showHeader = true }) {
       localStreamRef.current = stream;
       
       stream.getAudioTracks().forEach(track => {
-        track.enabled = !isMuted;
+        track.enabled = !isMutedRef.current;
       });
       setVoiceReady(true);
 
