@@ -363,3 +363,5 @@ if (process.env.RUN_WORKER_IN_API === 'true') require('./worker');
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+module.exports = { server, io }; // used by the integration tests

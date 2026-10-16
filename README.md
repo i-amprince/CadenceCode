@@ -3,6 +3,7 @@
 [![Deployment](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://cadence-code.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Tech Stack](https://img.shields.io/badge/Tech-MERN%20+%20Socket.IO%20+%20Redis-green?style=for-the-badge)](https://github.com/i-amprince/CadenceCode)
+[![CI](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml/badge.svg?branch=feature/redis-security-scaling)](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml)
 
 ---
 
@@ -210,6 +211,24 @@ npm start
 The app opens at **[http://localhost:3000](http://localhost:3000)**.
 
 > **Allowed origins:** the backend accepts requests from `http://localhost:3000` and `https://cadence-code.vercel.app`. If you host the frontend elsewhere, add its URL to `ALLOWED_ORIGINS` in `Server/server.js`.
+
+---
+
+## 🧪 Testing
+
+The backend has **43 automated integration tests** (Node's built-in test runner) that run the real server code over HTTP and Socket.IO, with in-memory stand-ins for MongoDB, Redis and the BullMQ queue. No database, Redis or secrets are needed.
+
+```bash
+cd Server
+npm test
+```
+
+| Suite | What it covers |
+| --- | --- |
+| `test/server.test.js` | Login required for REST and sockets, room membership, bcrypt passwords (including upgrading old plain-text ones), owner-only kick and delete, spoofed identity fields ignored, password-guess and code-run rate limits, code runs through the queue, concurrent edits converging, offline edits recovered on reconnect, debounced saves, freeing idle rooms |
+| `test/multi-instance.test.js` | Two server instances sharing one database: a newly opened room picks up another server's unsaved edits, live updates forwarded between servers, concurrent saves keeping both servers' edits, version-conflict retry, reload after unloading, and two servers converting the same legacy room at once |
+
+**GitHub Actions** runs the server tests and a production build of the frontend on every push and pull request (`.github/workflows/ci.yml`).
 
 ---
 
