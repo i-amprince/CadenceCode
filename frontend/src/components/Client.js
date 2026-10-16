@@ -8,6 +8,7 @@ const Client = ({
   picture,
   socketId,
   mySocketId,
+  roomId,
   email,
   ownerEmail,
 }) => {
@@ -19,7 +20,7 @@ const Client = ({
 
   const handleKick = () => {
     if (window.confirm(`Kick ${username}?`)) {
-      socket.emit('KICK_USER', { socketId });
+      socket.emit('KICK_USER', { roomId, socketId });
     }
   };
 

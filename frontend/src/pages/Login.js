@@ -20,7 +20,7 @@ export default function Login() {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(decoded));
       toast.success('Logged in!');
-      window.location.href = '/'; 
+      window.location.href = '/';  //lead to here 
     } catch (err) {
       console.error(err);
       toast.error('Login failed');

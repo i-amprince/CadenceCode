@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { socket } from '../socket';
+import { socket, authHeaders } from '../socket';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import VoiceChat from './VoiceChat';
@@ -15,7 +15,6 @@ export default function EditorPage() {
   const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [creator, setCreator] = useState('');
-  const user = JSON.parse(localStorage.getItem('user')); //fetched userr
 
   // --- ADDED: State to manage the mobile menu's visibility ---
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -55,32 +54,49 @@ export default function EditorPage() {
       navigate('/');
     };
 
+    const handleJoinError = ({ message }) => {
+      toast.error(message);
+      navigate('/');
+    };
+
+    // The server rejected the JWT (missing or expired): sign in again.
+    const handleConnectError = (err) => {
+      if (err.message !== 'UNAUTHORIZED') return;
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      toast.error('Your session expired. Please sign in again.');
+      navigate('/login');
+    };
+
+    // Identity (email, picture) comes from the verified JWT on the server.
     const joinRoom = () => socket.emit('JOIN', {
       roomId,
       username: location.state?.username,
-      picture: user?.picture,
-      email: user?.email,
     });
 
     socket.on('connect', joinRoom);
+    socket.on('connect_error', handleConnectError);
     socket.connect();
     if (socket.connected) joinRoom();
 
     socket.on('JOINED', handleJoined);
+    socket.on('JOIN_ERROR', handleJoinError);
     socket.on('DISCONNECTED', handleDisconnected);
     socket.on('KICKED', handleKicked);
 
     return () => {
       socket.disconnect();
       socket.off('connect', joinRoom);
+      socket.off('connect_error', handleConnectError);
       socket.off('JOINED', handleJoined);
+      socket.off('JOIN_ERROR', handleJoinError);
       socket.off('DISCONNECTED', handleDisconnected);
       socket.off('KICKED', handleKicked);
     };
-  }, [location.state, navigate, roomId, user?.picture, user?.email]);
+  }, [location.state, navigate, roomId]);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`) //everyone has creator set
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`, { headers: authHeaders() }) //everyone has creator set
       .then((res) => res.json())
       .then((data) => setCreator(data.creator))
       .catch(() => {});
@@ -143,6 +159,7 @@ export default function EditorPage() {
                       picture={client.picture}
                       socketId={client.socketId}
                       mySocketId={socket.id}
+                      roomId={roomId}
                       email={client.email} 
                       ownerEmail={creator}
                     />

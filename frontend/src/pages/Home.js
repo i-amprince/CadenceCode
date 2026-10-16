@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { authHeaders } from '../socket';
 
 import LogoImg from '../Images/img.svg'; 
 import styles from './Home.module.css';
@@ -36,12 +37,11 @@ export default function Home() {
         }
 
         try {
-            const user = JSON.parse(localStorage.getItem('user'));
+            // The server takes the creator from the login token.
             await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/room/create`, {
                 roomId,
                 password,
-                creator: user?.email || username,
-            });
+            }, { headers: authHeaders() });
             toast.success('Room Created Successfully!');
         } catch (err) {
             toast.error(err.response?.data?.error || 'Room creation failed');
@@ -58,9 +58,9 @@ export default function Home() {
             await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/room/join`, {
                 roomId,
                 password,
-            });
+            }, { headers: authHeaders() });
 
-            navigate(`/editor/${roomId}`, {
+            navigate(`/editor/${roomId}`, { //when said then navigate it to there 
                 state: {
                     username,
                 },

@@ -36,7 +36,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <GoogleOAuthProvider clientId= {process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-      <Toaster
+      <Toaster  //they overlay so over anything 
         position="top-right"
         toastOptions={{
           success: {

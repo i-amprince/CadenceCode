@@ -10,7 +10,7 @@ import { yCollab } from 'y-codemirror.next';
 import { Awareness } from 'y-protocols/awareness';
 import * as Y from 'yjs';
 import toast from 'react-hot-toast';
-import { socket } from '../socket';
+import { socket, authHeaders } from '../socket';
 import { githubLight } from '@uiw/codemirror-theme-github';
 import { FiMessageSquare, FiX } from 'react-icons/fi';
 import './Editor.css';
@@ -38,7 +38,6 @@ export default function Editor({ roomId, onCodeChange }) {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
-  const [clients, setClients] = useState([]);
   const [outputHeight, setOutputHeight] = useState(160);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const chatRef = useRef(null);
@@ -49,7 +48,7 @@ export default function Editor({ roomId, onCodeChange }) {
 
   const fetchCheckpoint = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/checkpoints`);
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/checkpoints`, { headers: authHeaders() });
       const data = await response.json();
       setCheckpoints(data.checkpoints || []);
     } catch {
@@ -84,11 +83,19 @@ export default function Editor({ roomId, onCodeChange }) {
       if (!disposed && origin !== remoteOrigin.current) socket.emit('YJS_UPDATE', { roomId, update });
     };
     const applyServerUpdate = ({ update }) => Y.applyUpdate(doc, asUint8Array(update), remoteOrigin.current);
+    // Sync step 2: after taking the server's state, send back whatever the server
+    // is missing (e.g. edits typed while offline), using its state vector.
+    const applyServerSync = ({ update, stateVector }) => {
+      applyServerUpdate({ update });
+      if (!stateVector) return;
+      const missing = Y.encodeStateAsUpdate(doc, asUint8Array(stateVector));
+      if (missing.length > 2) socket.emit('YJS_UPDATE', { roomId, update: missing });
+    };
     const requestSync = () => socket.emit('YJS_SYNC', { roomId });
 
     fileMap.observeDeep(refreshFiles);
     doc.on('update', sendLocalUpdate);
-    socket.on('YJS_SYNC', applyServerUpdate);
+    socket.on('YJS_SYNC', applyServerSync);
     socket.on('YJS_UPDATE', applyServerUpdate);
     socket.on('connect', requestSync);
     if (socket.connected) requestSync();
@@ -98,7 +105,7 @@ export default function Editor({ roomId, onCodeChange }) {
       disposed = true;
       fileMap.unobserveDeep(refreshFiles);
       doc.off('update', sendLocalUpdate);
-      socket.off('YJS_SYNC', applyServerUpdate);
+      socket.off('YJS_SYNC', applyServerSync);
       socket.off('YJS_UPDATE', applyServerUpdate);
       socket.off('connect', requestSync);
       awareness.destroy();
@@ -112,7 +119,7 @@ export default function Editor({ roomId, onCodeChange }) {
   useEffect(() => {
     const fetchRoomDetails = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/room/${roomId}/info`, { headers: authHeaders() });
         const data = await response.json();
         setOwnerEmail(data.creator);
       } catch {
@@ -123,7 +130,6 @@ export default function Editor({ roomId, onCodeChange }) {
     const handleSaveSuccess = async () => { toast.success('Saved'); await fetchCheckpoint(); };
     const handleChatMessage = (message) => setChatMessages((old) => [...old, message]);
     const handleError = ({ message }) => toast.error(message);
-    const handleJoined = ({ clients: nextClients }) => setClients(nextClients);
     const handleCheckpointUpdated = async () => { await fetchCheckpoint(); toast.success('Checkpoints updated'); };
 
     fetchRoomDetails();
@@ -132,14 +138,12 @@ export default function Editor({ roomId, onCodeChange }) {
     socket.on('SAVE_SUCCESS', handleSaveSuccess);
     socket.on('CHAT_MESSAGE', handleChatMessage);
     socket.on('ERROR', handleError);
-    socket.on('JOINED', handleJoined);
     socket.on('CHECKPOINT_UPDATED', handleCheckpointUpdated);
     return () => {
       socket.off('CODE_OUTPUT', handleCodeOutput);
       socket.off('SAVE_SUCCESS', handleSaveSuccess);
       socket.off('CHAT_MESSAGE', handleChatMessage);
       socket.off('ERROR', handleError);
-      socket.off('JOINED', handleJoined);
       socket.off('CHECKPOINT_UPDATED', handleCheckpointUpdated);
     };
   }, [roomId, fetchCheckpoint]);
@@ -171,7 +175,7 @@ export default function Editor({ roomId, onCodeChange }) {
     const file = files.find((item) => item.name === currentFile);
     const ext = currentFile?.split('.').pop()?.toLowerCase();
     setOutput(['Executing...']);
-    socket.emit('RUN_CODE', { languageId: (LANG[ext] || LANG.js).id, code: file?.code || '' });
+    socket.emit('RUN_CODE', { roomId, languageId: (LANG[ext] || LANG.js).id, code: file?.code || '' });
   };
   const save = () => socket.emit('SAVE_CODE', { roomId, fileName: currentFile });
   const addFile = () => {
@@ -189,14 +193,13 @@ export default function Editor({ roomId, onCodeChange }) {
   const sendChat = () => {
     const message = chatInput.trim();
     if (!message) return;
-    const me = clients.find((client) => client.socketId === socket.id);
-    socket.emit('CHAT_MESSAGE', { roomId, username: me?.username || user.name, message });
+    socket.emit('CHAT_MESSAGE', { roomId, message });
     setChatInput('');
   };
   const handleDeleteFile = (fileName) => {
     if (files.length <= 1) return toast.error('You cannot delete the last file.');
     if (window.confirm(`Are you sure you want to delete "${fileName}"? This action cannot be undone.`)) {
-      socket.emit('DELETE_FILE', { roomId, fileName, requester: user.email || user.name });
+      socket.emit('DELETE_FILE', { roomId, fileName });
     }
   };
 
