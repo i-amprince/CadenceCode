@@ -3,7 +3,7 @@
 [![Deployment](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://cadence-code.vercel.app/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Tech Stack](https://img.shields.io/badge/Tech-MERN%20+%20Socket.IO%20+%20Redis-green?style=for-the-badge)](https://github.com/i-amprince/CadenceCode)
-[![CI](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml/badge.svg?branch=feature/redis-security-scaling)](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml)
+[![CI](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/i-amprince/CadenceCode/actions/workflows/ci.yml)
 
 ---
 
@@ -253,11 +253,13 @@ The live demo runs the frontend on **Vercel** and the backend on **Render**.
 
 ## 🗂️ Versions
 
+`main` always holds the latest version. Earlier versions stay available on their own branches and tags.
+
 | Version | Tag | Branch | What it added |
 | --- | --- | --- | --- |
-| v1 | `v1-before-yjs` | | Original editor: whole-file sync over Socket.IO |
+| v1 | `v1-before-yjs` | `v1-original` | Original editor: whole-file sync over Socket.IO |
 | v2 | `v2-yjs-consistency` | `feature/yjs-consistency` | Yjs CRDT editing, so concurrent edits merge instead of overwriting |
-| v3 | `v3-redis-bullmq` | `feature/redis-security-scaling` | Authenticated sockets, room membership, bcrypt, Redis horizontal scaling, BullMQ code execution, rate limiting |
+| v3 (current) | `v3-redis-bullmq` | `main`, `feature/redis-security-scaling` | Authenticated sockets, room membership, bcrypt, Redis horizontal scaling, BullMQ code execution, rate limiting, 43 integration tests with CI |
 
 ---
 
